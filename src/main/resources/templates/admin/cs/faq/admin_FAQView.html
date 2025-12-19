@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>딸깍은행::자주 하시는 질문 보기</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_FAQView.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">  <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <div class="main-right">
+            <div class="faq_title">
+                <span class="title_sp">FAQ(자주하시는질문) 보기</span>
+            </div>
+
+            <div class="event-card">
+                <!-- 제목 영역 -->
+                <div class="event-title-section">
+                    <span class="category-badge">[[${faqDTO.codeName}]]</span>
+                    <h2 class="event-title-text">[[${faqDTO.question}]]</h2>
+                </div>
+
+                <div class="div_sp">
+                    <span class="sp_content">[[${faqDTO.answer}]]</span>
+                </div>
+
+                <!-- 버튼 영역 -->
+                <div class="button-group">
+                    <button class="btn btn-delete" th:onclick="|location.href='@{/admin/faq/delete(faqId=${faqDTO.faqId})}'|">삭제</button>
+                    <button class="btn btn-edit" th:onclick="|location.href='@{/admin/faq/modify(faqId=${faqDTO.faqId})}'|">수정</button>
+                    <button class="btn btn-list" th:onclick="|location.href='@{/admin/faq/list}'|">목록</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

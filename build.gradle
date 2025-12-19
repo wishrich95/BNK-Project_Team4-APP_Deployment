@@ -1,0 +1,120 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.7'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'kr.co.busanbank'
+version = '0.0.1-SNAPSHOT'
+description = 'Project'
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE  // 중복 처리 전략 추가
+
+    filesMatching("application.yml") {
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' } //Komoan(형태소 분석 관련 추가)
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.5'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.3.3'
+
+    // https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity6', version: '3.1.2.RELEASE'
+
+    // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.1'
+
+    implementation 'com.solapi:sdk:1.0.3'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // 크롤링
+    implementation 'org.jsoup:jsoup:1.17.2'
+
+    // GPT분석 API
+    implementation 'com.theokanning.openai-gpt3-java:service:0.18.2'
+
+    // OCR 분석
+    implementation 'net.sourceforge.tess4j:tess4j:5.4.0'
+
+    //Komoan(형태소 분석)
+    implementation 'com.github.shin285:KOMORAN:3.3.9'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    //flutter 푸시 알림
+    implementation 'com.google.firebase:firebase-admin:9.7.0'
+    // jwt 관련 의존성 추가
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.7'
+
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.7'
+
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.7'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Gradle 빌드 시 외부 환경변수로 민감 정보를 주입하는 설정(API 기능에 사용(로컬에서 시크릿키 오류 안나게 하기 위해 default값))
+ext {
+    GOOGLE_CLIENT_ID = System.getenv('GOOGLE_CLIENT_ID') ?: 'default_value'
+    GOOGLE_CLIENT_SECRET = System.getenv('GOOGLE_CLIENT_SECRET') ?: 'default_value'
+    SOLAPI_KEY = System.getenv('SOLAPI_KEY') ?: 'default_value'
+    SOLAPI_SECRET = System.getenv('SOLAPI_SECRET') ?: 'default_value'
+    SOLAPI_FROM = System.getenv('SOLAPI_FROM') ?: 'default_value'
+    GEMINI_KEY = System.getenv('GEMINI_KEY') ?: 'default_value'
+    OPENAI_KEY = System.getenv('OPENAI_KEY') ?: 'default_value'
+    AES_SECRET = System.getenv('AES_SECRET') ?: 'default_value'
+}

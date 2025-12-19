@@ -1,0 +1,119 @@
+
+<div th:replace="~{my/_head.html}"></div>
+<script th:src="@{/js/my/sidebar.js}" defer></script>
+
+
+<main>
+        <div class="board">
+            <div class="side">
+                <h2>마이페이지</h2>
+                <aside class="sidebar">
+                    <div class="side-item">
+                        <div class="main-menu">
+                            <p>금융상품</p>
+                            <svg
+                                class="arrow-icon lucide lucide-chevron-down-icon lucide-chevron-down"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"/>
+                            </svg>
+                        </div>
+                        <ul class="sub-menu">
+                            <li><a th:href="@{/my/items}" class="sub-link">상품 가입 정보</a></li>
+                            <li><a th:href="@{/my/cancel}" class="sub-link">상품 해지</a></li>
+                        </ul>
+                    </div>
+                    <div class="side-item">
+                        <div class="main-menu">
+                            <p>설정</p>
+                            <svg
+                                class="arrow-icon lucide lucide-chevron-down-icon lucide-chevron-down"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"/>
+                            </svg>
+                        </div>
+                        <ul class="sub-menu">
+                            <li><a th:href="@{/my/modify}" class="sub-link">사용자 정보 수정</a></li>
+                            <li><a th:href="@{/my/change}" class="sub-link">비밀번호 수정</a></li>
+                            <li><a th:href="@{/my/withdraw}" class="sub-link">회원탈퇴</a></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+    
+     
+
+            <div class="content">
+
+                <div class="board-upper">
+                    <h2>상품 가입 정보</h2>
+                </div>
+
+                <div class="board-lower">
+                    <div class="select-cate">
+                        <a href="#">전체</a>
+                    </div>
+                    <div class="items-welcome">
+                        <div class="welcom-ment">
+                            <p>조회기준일시: [[${connectTime}]]</p>
+                            <h2><strong>[[${user.userName}]]</strong> 고객님의 금융상품 현황입니다.</h2>
+                            <h3>함께하고 있는 상품들을 한눈에 확인해보세요.</h3>
+                        </div>
+                        <div class="remain-item">
+                            <p>총 잔액(예금)</p>
+                            <h2><span>[[${myBalance}]]</span> 원</h2>
+                        </div>
+                    </div>
+
+                    <div class="my-account" th:each="p : ${myproducts}">
+                        <input type="hidden" name="productNo" th:value="${p.productNo}">
+                        <h2>[[${p.productName}]]</h2>
+                        <table class="item-table">
+                            <tr>
+                                <th>상품명</th>
+                                <th>계좌번호</th>
+                                <th>가입일</th>
+                                <th>예상 만기일</th>
+                                <th>적용 이율</th>
+                                <th>잔액(원)</th>
+                                <th>바로가기</th>
+                            </tr>
+                            <tr>
+                                <td>[[${p.productName}]]</td>
+                                <td>[[${p.accountNo}]]</td>
+                                <td>[[${p.startDate}]]</td>
+                                <td>[[${p.expectedEndDate}]]</td>
+                                <td>[[${p.applyRate}]]</td>
+                                <td>[[${p.balance}]]원</td>
+                                <td><a th:href="@{/my/cancel(productNo=${p.productNo})}">해지하기</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>

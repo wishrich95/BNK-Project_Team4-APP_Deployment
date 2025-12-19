@@ -1,0 +1,59 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : Sidebar 변경
+-->
+
+<th:block th:fragment="sidebarFragment">
+
+    <aside class="sidebar">
+
+        <!-- 1차 카테고리 제목 -->
+        <h3 th:text="${rootCategory != null} ? ${rootCategory.categoryName} : '고객센터'">
+            고객센터
+        </h3>
+
+        <nav>
+            <div class="sidebar-menu"
+                 th:each="d2 : ${depth2Menu}"
+                 th:classappend="${activeDepth2Id} == ${d2.categoryId} ? ' open'">
+
+                <!-- 2차: 링크가 있는 경우 -->
+                <a th:if="${d2.routePath != null}"
+                   th:href="@{${d2.routePath}}"
+                   th:classappend="${currentCategoryId} == ${d2.categoryId} ? ' is-active'">
+                    <span th:text="${d2.categoryName}">메뉴</span>
+                </a>
+
+                <!-- 2차: 링크가 없는 경우 텍스트만 -->
+                <span th:if="${d2.routePath == null}"
+                      th:text="${d2.categoryName}"></span>
+
+                <!-- 3차: 있으면 side-submenu로 감싸기 -->
+                <div class="side-submenu"
+                     th:if="${depth3Map[d2.categoryId] != null
+                         and #lists.size(depth3Map[d2.categoryId]) > 0}">
+                    <a th:each="d3 : ${depth3Map[d2.categoryId]}"
+                       th:href="@{${d3.routePath}}"
+                       th:classappend="${currentCategoryId} == ${d3.categoryId} ? ' is-active'"
+                       th:text="${d3.categoryName}"></a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="sidebar-icons">
+            <div><a th:href="@{/cs/customerSupport/login/talkCounsel}">
+                <i class="xi-message"></i>
+                <p>Talk상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/login/emailList}">
+                <i class="xi-mail"></i>
+                <p>메일상담</p>
+            </a></div>
+            <div><a th:href="@{/cs/customerSupport/faq}">
+                <i class="xi-lightbulb"></i>
+                <p>FAQ</p>
+            </a></div>
+        </div>
+    </aside>
+</th:block>

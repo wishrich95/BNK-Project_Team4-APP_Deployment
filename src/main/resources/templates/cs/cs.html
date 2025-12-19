@@ -1,0 +1,250 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 고객센터 메인 UI*UX 변경
+-->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::고객센터</title>
+
+    <!-- 딸깍은행 공통 -->
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/cs/_csheader.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/_csfooter.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/main.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/oil.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/cs/csGnbDropdown.js}" defer></script>
+    <script th:src="@{/js/cs/csGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/cs/oil.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script th:src="@{/js/company/quickCards.js}" defer></script>
+    <script th:src="@{/js/cs/oilPump.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{cs/_csheader :: csHeaderFragment}"></div>
+
+    <main id="cs-main">
+        <div class="cs-container">
+
+            <!-- 히어로 영역 -->
+            <section class="cs-hero">
+                <div class="cs-hero__inner">
+
+                    <!-- 좌측: 카피 + 검색 -->
+                    <div class="cs-hero__copy">
+                        <div class="cs-quot-box">
+                            <img class="cs-quote__open" th:src="@{/images/cs/quotation_marks_1.png}" alt="">
+
+                            <div class="cs-quote-text">
+                                <h1 class="cs-title">고객님 무엇을 도와드릴까요?</h1>
+                                <p class="cs-sub">언제나 고객님 곁에 딸깍은행이 함께 합니다.</p>
+                            </div>
+
+                            <img class="cs-quote__close" th:src="@{/images/cs/quotation_marks_2.png}" alt="">
+                        </div>
+
+                        <h3 class="cs-search-title">자주 묻는 질문 검색하기</h3>
+
+                        <form class="cs-search" role="search" th:action="@{/cs/customerSupport/faq}" method="get">
+                            <label for="cs-search-input" class="sr-only">자주 묻는 질문 검색</label>
+                            <input id="cs-search-input" name="keyword" type="text" placeholder="검색어를 입력하세요." />
+
+                            <!-- 기본 검색타입: 질문+답변 -->
+                            <input type="hidden" name="searchType" value="qa"/>
+
+                            <button type="submit" aria-label="검색">
+                                <i class="xi-search"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- 우측: 일러스트 -->
+                    <div class="cs-hero__art">
+                        <img th:src="@{/images/cs/Service-24_7-bro.png}" alt="상담원이 고객의 문의를 응대하는 일러스트">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 퀵 링크 5칸 -->
+            <section class="cs-quick">
+                <ul class="quick-cards-grid">
+                    <li>
+                        <a th:href="@{/cs/productCenter/useRate}" class="quick-card">
+                            <div class="icon-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="lucide lucide-circle-dollar-sign-icon lucide-circle-dollar-sign default-icon">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+                                    <path d="M12 18V6"/></svg>
+
+                                <div class="lottie-icon"
+                                     th:data-animation-path="@{/js/cs/coin.json}"
+                                     data-scale="2.1"
+                                     data-offset-x="0"
+                                     data-offset-y="-15">
+                                </div>
+                            </div>
+                            <h3>수수료 안내</h3>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a th:href="@{/cs/userGuide/serviceAvailable}" class="quick-card">
+                            <div class="icon-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="lucide lucide-alarm-clock-icon lucide-alarm-clock default-icon">
+                                    <circle cx="12" cy="13" r="8"/>
+                                    <path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/>
+                                    <path d="M6.38 18.7 4 21"/><path d="M17.64 18.67 20 21"/></svg>
+
+                                <div class="lottie-icon"
+                                     th:data-animation-path="@{/js/cs/alarmClock.json}"
+                                     data-scale="3"
+                                     data-offset-x="0"
+                                     data-offset-y="-20">
+                                </div>
+                            </div>
+                            <h3>이용시간 안내</h3>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a th:href="@{/cs/productCenter/manual}" class="quick-card">
+                            <div class="icon-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="lucide lucide-file-search-corner-icon lucide-file-search-corner default-icon">
+                                    <path d="M11.1 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.589 3.588A2.4 2.4 0 0 1 20 8v3.25"/>
+                                    <path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="m21 22-2.88-2.88"/><circle cx="16" cy="17" r="3"/></svg>
+
+                                <div class="lottie-icon"
+                                     th:data-animation-path="@{/js/cs/fileSearch.json}"
+                                     data-scale="1.8"
+                                     data-offset-x="0"
+                                     data-offset-y="-15">
+                                </div>
+                            </div>
+                            <h3>상품공시실</h3>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a th:href="@{/company/companymap}" class="quick-card">
+                            <div class="icon-container">
+                                <i class="xi-maker default-icon"></i>
+                                <div class="lottie-icon"
+                                     th:data-animation-path="@{/js/cs/location.json}"
+                                     data-scale="2.1"
+                                     data-offset-x="0"
+                                     data-offset-y="-8">
+                                </div>
+                            </div>
+                            <h3>영업점 안내</h3>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:void(0);"
+                           class="cs-quick__item oil-event-trigger"
+                           th:attr="data-logged-in=${#authorization.expression('isAuthenticated()')}">
+
+                            <div class="oil-lottie"
+                                 th:data-animation-path="@{/js/cs/oilPump.json}">
+                            </div>
+
+                            <img th:src="@{/images/cs/oil.png}" alt="" aria-hidden="true">
+                            <span>이벤트 참여</span>
+                            <h3>오일 필드 찾기</h3>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </div>
+        <!-- 오일 이벤트 모달 -->
+        <div class="oil-event-modal is-hidden" id="oilEventModal">
+            <div class="oil-event-backdrop"></div>
+
+            <div class="oil-event-dialog">
+                <button class="oil-event-close" type="button" aria-label="닫기">×</button>
+
+                <!-- 모달 헤더 -->
+                <div class="oil-event-header">
+                    <h3>오일 필드 찾기</h3>
+                    <p>하나의 칸에 오일이 숨어 있습니다. 찾아보세요!</p>
+                </div>
+
+                <!-- 모달 바디 -->
+                <div class="oil-event-body">
+
+                    <!-- 상단 배너 (귀여운 오일 방울) -->
+                    <div class="oil-event-banner">
+
+                        <!-- 오일 방울 캐릭터 -->
+                        <div class="oil-drop-mascot">
+                            <div class="oil-drop-inner">
+                                <span class="oil-drop-eyes">● ●</span>
+                                <span class="oil-drop-mouth">▿</span>
+                            </div>
+                        </div>
+
+                        <!-- 오른쪽 텍스트 -->
+                        <div class="oil-banner-copy">
+                            <p class="oil-banner-title">오늘의 행운 오일 방울 💧</p>
+                            <p class="oil-banner-desc">
+                                칸 하나를 골라 귀여운 오일 방울을 찾으면<br>
+                                오일 쿠폰을 드립니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 지뢰찾기형 그리드 -->
+                    <div class="oil-event-playarea">
+                        <div class="oil-grid" data-grid-size="3"></div>
+
+                        <!-- 🎉 Lottie 애니메이션 - 공개 URL 사용 -->
+                        <div class="oil-lottie-container is-hidden">
+                            <lottie-player
+                                    id="oilLottieAnimation"
+                                    src="https://assets2.lottiefiles.com/packages/lf20_touohxv0.json"
+                                    background="transparent"
+                                    speed="1"
+                                    style="width: 300px; height: 300px;">
+                            </lottie-player>
+                        </div>
+
+                        <p class="oil-event-message"></p>
+                    </div>
+                </div>
+
+                <!-- 모달 푸터 -->
+                <div class="oil-event-footer">
+                    <button class="oil-coupon-btn" type="button" disabled>
+                        쿠폰 발급 받기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer 부분 -->
+    <div th:replace="~{cs/_csfooter :: csfooterFragment(${appInfo})}"></div>
+</body>
+</html>

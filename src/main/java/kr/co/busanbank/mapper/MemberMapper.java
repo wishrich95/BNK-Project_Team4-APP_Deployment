@@ -1,0 +1,54 @@
+package kr.co.busanbank.mapper;
+
+import kr.co.busanbank.dto.TermDTO;
+import kr.co.busanbank.dto.UsersDTO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.userdetails.User;
+
+import java.util.List;
+
+@Mapper
+public interface MemberMapper {
+
+
+    UsersDTO findByUserId(@Param("userId") String userId);
+
+    void insertUser(UsersDTO user);
+
+    int countByUserId(@Param("userId") String userId);
+    int countByEmail(@Param("email") String email);
+    int countByHp(@Param("hp") String hp);
+
+    UsersDTO findUserIdInfoEmail(@Param("userName") String userName, @Param("email") String email);
+
+    UsersDTO findUserIdInfoHp(@Param("userName") String userName, @Param("hp") String hp);
+
+
+    UsersDTO findUserPwInfoEmail(@Param("userName") String userName, @Param("userId") String userId, @Param("email") String email);
+
+    UsersDTO findUserPwInfoHp(@Param("userName") String userName, @Param("userId") String userId, @Param("hp") String hp);
+
+    void updatePw(@Param("userId") String userId, @Param("encodedPass") String encodedPass);
+
+    List<TermDTO> getTermsAll();
+
+    //String findAccountPasswordByUserNo(Long userNo);
+    // 2025/12/05 – CBC 적용 관련 로직 수정 – 작성자: 오서정
+    List<String> selectAllEmails();
+    List<String> selectAllHps();
+    List<String> selectAllUserNames();
+
+    List<UsersDTO> selectAllForIdFind();
+    List<UsersDTO> selectAllForPwFind();
+
+    // 2025/12/11 - Flutter관련 수정 - 작성자: 김수진
+    String findAccountPasswordByUserId(@Param("userId") String userId);
+    String findAccountPasswordByUserNo(@Param("userNo") Long userNo);
+    // 🔥 새로 추가해야 하는 userNo 조회 메서드
+    Long findUserNoByUserId(@Param("userId") String userId);
+
+    // 2025/12/18 - userNo로 사용자 정보 조회 - 작성자: 진원
+    UsersDTO findByUserNo(@Param("userNo") Long userNo);
+
+}

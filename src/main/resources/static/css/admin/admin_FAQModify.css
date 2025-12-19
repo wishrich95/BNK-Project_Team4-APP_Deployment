@@ -1,0 +1,200 @@
+* {  /* 공통 세팅 */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.main-right { /* 오른쪽 레이아웃 */
+    background: #FFE9EA 0% 0% no-repeat padding-box;
+    height: auto;
+    min-height: 1080px;
+    opacity: 1;
+    width: 1560px;
+}
+
+.faq_title {
+    margin-left: 310px;
+    margin-top: 86px;
+}
+.title_sp {
+    color:#D03238;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 700;
+    font-size: 28px;
+    font-family: Pretendard;
+    line-height: 29px;
+}
+/* 폼 스타일 */
+form {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 1000px;
+    margin-left: 310px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+form::-webkit-scrollbar {
+    display: none;
+}
+
+/* Select 박스 스타일 */
+select {
+    background-color: #F8F9FA;
+    border: 1px solid #DEE2E6;
+    border-radius: 5px;
+    color: #495057;
+    cursor: pointer;
+    font-family: Pretendard;
+    font-size: 17px;
+    height: 45px;
+    outline: none;
+    padding: 0 15px;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+
+
+
+
+
+/* 폼 그룹 */
+.form-group {
+    margin-bottom: 32px;
+}
+
+.form-label {
+    color: #333;
+    display: block;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Input 스타일 */
+.form-input {
+    background-color: #F8F9FA;
+    border: 2px solid #E9ECEF;
+    border-radius: 10px;
+    color: #333;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 17px;
+    height: 50px;
+    outline: none;
+    padding: 0 16px;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.form-input:focus {
+    background-color: white;
+    border-color: #3693c2;
+    box-shadow: 0 0 0 4px rgba(54, 147, 194, 0.1);
+}
+
+.form-input::placeholder {
+    color: #ADB5BD;
+}
+
+/* Textarea 스타일 */
+.form-textarea {
+    background-color: #F8F9FA;
+    border: 2px solid #E9ECEF;
+    border-radius: 10px;
+    color: #333;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    min-height: 320px;
+    outline: none;
+    padding: 16px;
+    resize: none;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.form-textarea:focus {
+    background-color: white;
+    border-color: #3693c2;
+    box-shadow: 0 0 0 4px rgba(54, 147, 194, 0.1);
+}
+
+.form-textarea::placeholder {
+    color: #ADB5BD;
+}
+
+.form-textarea::-webkit-scrollbar {
+    display: none;
+}
+
+/* 버튼 영역 */
+.button-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid #E9ECEF;
+}
+
+.btn {
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 32px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cancel {
+    background-color: #F8F9FA;
+    color: #495057;
+}
+
+.btn-cancel:hover {
+    background-color: #E9ECEF;
+    transform: translateY(-1px);
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #3693c2 0%, #2a7ba3 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(54, 147, 194, 0.3);
+}
+
+.btn-submit:hover {
+    box-shadow: 0 6px 20px rgba(54, 147, 194, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    body {
+        padding: 20px 16px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .button-group {
+        flex-direction: column-reverse;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,146 @@
+<!--
+    날짜 : 2025/11/21
+    이름 : 오서정
+    내용 : 상품해지 완료 페이지 html/css 수정 작성
+-->
+<div th:replace="~{my/_head.html}"></div>
+<script th:src="@{/js/my/sidebar.js}" defer></script>
+
+
+
+<main>
+        <div class="board">
+            <div class="side">
+                <h2>마이페이지</h2>
+                <aside class="sidebar">
+                    <div class="side-item">
+                        <div class="main-menu">
+                            <p>금융상품</p>
+                            <svg
+                                    class="arrow-icon lucide lucide-chevron-down-icon lucide-chevron-down"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"/>
+                            </svg>
+                        </div>
+                        <ul class="sub-menu">
+                            <li><a th:href="@{/my/items}" class="sub-link">상품 가입 정보</a></li>
+                            <li><a th:href="@{/my/cancel}" class="sub-link">상품 해지</a></li>
+                        </ul>
+                    </div>
+                    <div class="side-item">
+                        <div class="main-menu">
+                            <p>설정</p>
+                            <svg
+                                    class="arrow-icon lucide lucide-chevron-down-icon lucide-chevron-down"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"/>
+                            </svg>
+                        </div>
+                        <ul class="sub-menu">
+                            <li><a th:href="@{/my/modify}" class="sub-link">사용자 정보 수정</a></li>
+                            <li><a th:href="@{/my/change}" class="sub-link">비밀번호 수정</a></li>
+                            <li><a th:href="@{/my/withdraw}" class="sub-link">회원탈퇴</a></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+    
+     
+
+            <div class="content">
+
+                <div class="board-upper">
+                    <h2>상품 해지</h2>
+
+                </div>
+
+                <div class="board-lower">
+
+                    <div class="register-step">
+                        <p class="no-step">1</p>
+                        <p class="no-step">2</p>
+                        <div class="now-step">
+                            <p><span>3 </span>해지완료</p>
+                        </div>
+                    </div>
+
+                     <div class="finish-step">
+
+                         <img th:src="@{/images/my/verified-file.gif}" style="width: 130px;">
+                        <h2>상품 해지가 완료되었습니다.</h2>
+                        <div class="btn-finish-wrap">
+                            <button type="submit" class="agree-btn" onclick="location.href='/busanbank/'">홈으로<i class="xi-home-o"></i></button>
+                        </div>
+                    </div>
+
+
+                    <div class="table-area">
+                        <h3>해지 내역</h3>
+                        <table class="info-table">
+                            <tr>
+                                <th>상품명</th>
+                                <td th:text="${cancelProduct.productName}"></td>
+                                <th>계좌번호</th>
+                                <td th:text="${cancelProduct.accountNo}"></td>
+                            </tr>
+                            <tr>
+                                <th>해지구분</th>
+                                <td th:text="${cancelProduct.mature ? '만기해지' : '조기해지'}"></td>
+                                <th>해지예정일</th>
+                                <td th:text="${cancelProduct.actualCancelDate}"></td>
+                            </tr>
+                            <tr>
+                                <th>신규일자</th>
+                                <td th:text="${cancelProduct.startDate}"></td>
+                                <th>만기일자</th>
+                                <td th:text="${cancelProduct.expectedEndDate}"></td>
+                            </tr>
+                            <tr>
+                                <th>해지원금 ①</th>
+                                <td th:text="${formattedPrincipal} + '원'"></td>
+                                <th>해지이자 ②</th>
+                                <td th:text="${formattedEarlyInterest} + '원'"></td>
+                            </tr>
+                            <tr>
+                                <th>만기후이자 ③</th>
+                                <td th:text="${formattedMaturityInterest} + '원'"></td>
+                                <th>환입이자 ④</th>
+                                <td th:text="${formattedRefundInterest} + '원'"></td>
+                            </tr>
+                            <tr>
+                                <th>징수세금 ⑤</th>
+                                <td th:text="${formattedTaxAmount} + '원'"></td>
+                            </tr>
+                            <tr>
+                                <th>차감지급액(①+②+③-④-⑤)</th>
+                                <td th:text="${formattedNetPayment} + '원'"></td>
+                                <th>실입금금액</th>
+                                <td th:text="${formattedFinalAmount} + '원'"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>

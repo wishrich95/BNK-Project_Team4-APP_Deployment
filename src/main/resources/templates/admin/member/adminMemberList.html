@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>딸깍은행::회원 목록 관리</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_memberList.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_memberList.js}"></script>
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <div class="main-right">
+            <div class="productList_title">
+                <span class="title_sp">회원 목록 관리</span>
+            </div>
+
+            <table>
+                <tr style="background-color: #E1545A;color:white;">
+                    <th style="border-radius: 5px 0 0 0;">No.</th>
+                    <th>회원번호</th>
+                    <th>이름</th>
+                    <th>아이디</th>
+                    <th>전화번호</th>
+                    <th>보유계좌수</th>
+                    <th>총잔액</th>
+                    <th>최근접속일</th>
+                    <th>상태</th>
+                    <th style="border-radius: 0 5px 0 0;">가입일</th>
+                </tr>
+                <tr class="content_tr detailBtn" th:each="adminMember, stat:${pageResponseDTO.dtoList}" th:data-userno="${adminMember.userNo}">
+                    <td th:text="${stat.index + 1}"></td>
+                    <td>[[${adminMember.userNo}]]</td>
+                    <td>[[${adminMember.userName}]]</td>
+                    <td>[[${adminMember.userId}]]</td>
+                    <td>[[${adminMember.hp}]]</td>
+                    <td>[[${adminMember.accountNo}]]</td>
+                    <td>₩[[${#numbers.formatInteger(adminMember.balance, 3, 'COMMA')}]]</td>
+                    <td>[[${adminMember.updatedAt}]]</td>
+                    <td style="color:#00B050;" th:text="${adminMember.status == 'A' ? '정상'
+                : adminMember.status == 'W' ? '대기' : '정지'}"></td> <!-- w는 임시 -->
+                    <td>[[${adminMember.regDate}]]</td>
+                </tr>
+            </table>
+
+            <div class="page_div">
+                <ul class="pagenation">
+                    <li th:if="${pageResponseDTO.prev}">
+                        <a class="page2" th:href="@{/admin/member/list(pg=${pageResponseDTO.start - 1})}">
+                            <span class="prev"></span>
+                        </a>
+                    </li>
+
+                    <th:block th:if="${pageResponseDTO.total > 0}" th:each="num:${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                        <li>
+                            <a th:href="@{/admin/member/list (pg=${num})}" th:class="${num == pageResponseDTO.pg ? 'page1' : 'page2'}">[[${num}]]</a>
+                        </li>
+                    </th:block>
+
+                    <li th:if="${pageResponseDTO.next}">
+                        <a class="page2" th:href="@{/admin/member/list(pg=${pageResponseDTO.end + 1})}">
+                            <span class="next"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 모달 박스 -->
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>회원 정보</h3>
+                        <span class="close">&times;</span>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-section">
+                            <div class="section-title">기본 정보</div>
+                            <div class="form-grid">
+                                <div class="form-row">
+                                    <label class="form-label">회원번호</label>
+                                    <div id="modalUserNo" class="form-value highlight-value">10001015</div>
+                                </div>
+                                <div class="form-row">
+                                    <label class="form-label">이름</label>
+                                    <div id="modalUserName" class="form-value">김민수</div>
+                                </div>
+                                <div class="form-row full-width">
+                                    <label class="form-label">아이디</label>
+                                    <div id="modalUserId" class="form-value">minsuKim@bank.com</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-title">상세 정보</div>
+                            <div class="form-grid">
+                                <div class="form-row">
+                                    <label class="form-label">전화번호</label>
+                                    <div id="modalHp" class="form-value">010-2345-6789</div>
+                                </div>
+                                <div class="form-row">
+                                    <label class="form-label">보유계좌수</label>
+                                    <div id="modalAccountNo" class="form-value">1개</div>
+                                </div>
+                                <div class="form-row">
+                                    <label class="form-label">총잔액</label>
+                                    <div id="modalBalance" class="form-value highlight-value">₩5,820,000</div>
+                                </div>
+                                <div class="form-row">
+                                    <label class="form-label">최근접속일</label>
+                                    <div id="modalUpdatedAt" class="form-value">2025.11.07</div>
+                                </div>
+                                <div class="form-row">
+                                    <label class="form-label">상태</label>
+                                    <div class="form-value">
+                                        <span id="modalStatus" class="status-badge">정상</span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <label class="form-label">가입일</label>
+                                    <div id="modalRegDate" class="form-value">2022-03-14</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+* {  /* 공통 세팅 */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.login_top {
+    background: #FFE9EA 0% 0% no-repeat padding-box;
+    display: flex;
+    width: auto;
+    height: 640px;
+    justify-content: center;
+    align-content: center;
+    position: relative;
+}
+.login_img {
+    width: auto;
+    height: 640px;
+}
+.logo_img {
+    width: auto;
+    height: 25px;
+    left: 360px;
+    position: absolute;
+    top: 50px;
+}
+
+.login_bottom {
+    background: #F8F8F8 0 0 no-repeat padding-box;
+    height: 280px;
+}
+.span_div {
+    left: 410px;
+    position: absolute;
+    top: 700px;
+}
+.sp1 {
+    color: #E1545A;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 900;
+    font-size: 28px;
+    line-height: 32px;
+}
+.sp2 {
+    color: #666666;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    font-size: 28px;
+    line-height: 32px;
+}
+
+.id_div {
+    align-items: center;
+    background-color: #E6E6E6;
+    border-radius: 5px;
+    display: flex;
+    left: 810px;
+    position: absolute;
+    top: 700px;
+    width: 300px;
+}
+.img_div {
+    align-items: center;
+    display: flex;
+    height: 45px;
+    justify-content: center;
+    width: 45px;
+}
+.login {
+    background-color: #E6E6E6;
+    border:none;
+    border-left: 1px solid #B9B9B9;
+    height: 25px;
+    outline: none;
+    padding-left: 13px;
+    width:240px;
+}
+.login::placeholder {color: #E1545A;}
+
+.pw_div {
+    align-items: center;
+    background-color: #E6E6E6;
+    border-radius: 5px;
+    display: flex;
+    left: 810px;
+    position: absolute;
+    top: 755px;
+    width: 300px;
+}
+
+.login_btn {
+    background-color: #E1545A;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor:pointer;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    font-size: 16px;
+    height: 45px;
+    left: 810px;
+    line-height: 32px;
+    position: absolute;
+    top: 815px;
+    width: 300px;
+}
+
+.footer_sp {
+    color: #666666;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 300;
+    font-size: 12px;
+    left: 410px;
+    line-height: 16px;
+    position: absolute;
+    top: 845px;
+}
+
+:root {
+    --purple-900: #662382; /* 메인 컬러 */
+    --purple-700: #883ea8;
+    --purple-300: #8978a5;
+    --purple-100: #F5EEFA;
+    --pink-700: #e5007d;
+    --pink-300: #ec6ea5;
+    --pink-100: #ffe1ec;
+    --pink-50: #fff8fa;
+    --red-900: #D03238;
+    --red-700: #E1545A;
+    --red-600: #FF4148;
+    --red-500: #FFB9BD;
+    --red-300: #FFD1D3;
+    --red-200: #FFE9EA;
+    --red-100: #FFF6F7;
+    --orange-900: #FF8800;
+    --orange-500: #FFBB6E;
+    --orange-100: #FFF3E5;
+    --green-900: #02A84D;
+    --green-100: #E9FFF3;
+    --blue-900: #0080E2;
+    --blue-100: #E9F8FF;
+    --white: #ffffff;
+    --dark: #0E0E0E;
+    --grey-900: #333333;
+    --grey-700: #666666;
+    --grey-500: #B9B9B9;
+    --grey-300: #DEDEDE;
+    --grey-200: #e7e7e7;
+    --grey-100: #F8F8F8;
+    --grey-50: #fdfdfd;
+    --container: 1200px;
+}

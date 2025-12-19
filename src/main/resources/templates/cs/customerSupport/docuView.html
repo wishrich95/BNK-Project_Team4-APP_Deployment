@@ -1,0 +1,33 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 은행거래 필요서류안내 상세 페이지 UI*UX 변경
+-->
+
+<div th:replace="~{cs/_csheader.html}"></div>
+<div th:replace="~{cs/_sidebar :: sidebarFragment}"></div>
+
+    <main>
+        <h2>은행거래 필요서류안내</h2>
+
+        <section class="docu-detail">
+            <div class="docu-title" th:text="${doc.title}">개인회원 소득증빙(신규/한도상향)필요서류</div>
+            <div class="docu-date" th:text="'등록일 : ' + ${doc.createdAt}">등록일 : 2020-09-23</div>
+
+           <div class="docu-content" th:text="${doc.content}">
+           </div>
+            <div class="docu-note">
+            </div>
+            <div class="docu-btn">
+                <button type="button" onclick="history.back()">목록</button>
+            </div>
+        </section>
+    </main>
+    </div>
+
+<div th:replace="~{cs/_csfooter.html}"></div>
+<script th:src="@{/js/cs/sidebar.js}"></script>
+</body>
+</html>
+
+

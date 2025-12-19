@@ -1,0 +1,92 @@
+package kr.co.busanbank.security;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import kr.co.busanbank.dto.UsersDTO;
+import kr.co.busanbank.service.LoginTimePointService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
+
+    private final LoginTimePointService loginTimePointService;
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) throws IOException, ServletException {
+
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        UsersDTO user = userDetails.getUsersDTO();
+
+        HttpSession session = request.getSession();
+
+        session.setAttribute("userNo", user.getUserNo());
+        session.setAttribute("userId", user.getUserId());
+        session.setAttribute("user", user);
+
+        // 로그인 시간 포인트 부여 세션 등록 (작성자: 진원, 2025-12-04)
+        loginTimePointService.registerLoginSession(user.getUserNo());
+
+        RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+        RequestCache requestCache = new HttpSessionRequestCache();
+
+        // 🔥 0. 상담원은 SavedRequest 무시하고 콘솔로 이동
+        boolean isConsultant = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_CONSULTANT"));
+
+        if (isConsultant) {
+            log.info("🔄 상담원 로그인 → SavedRequest 무시하고 상담원 콘솔로 이동");
+            redirectStrategy.sendRedirect(request, response, "/cs/chat/consultant");
+            return;
+        }
+
+        // 1. 🔥 Spring Security가 저장한 원래 요청 URL 있는지 확인
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
+        if (savedRequest != null) {
+            String targetUrl = savedRequest.getRedirectUrl();
+            log.info("🔄 [SavedRequest 존재] → {}", targetUrl);
+
+            // API 엔드포인트는 제외 (JSON 응답 방지) - 작성자: 진원, 2025-11-25
+            if (targetUrl != null && targetUrl.contains("/api/")) {
+                log.info("⚠️ API 엔드포인트 리다이렉트 방지 → /my로 이동");
+                redirectStrategy.sendRedirect(request, response, "/my");
+                return;
+            }
+
+            redirectStrategy.sendRedirect(request, response, targetUrl);
+            return;
+        }
+
+        // 2. 🔥 세션에 저장해둔 redirect_uri 체크
+        String redirectUri = (session != null) ? (String) session.getAttribute("redirect_uri") : null;
+
+        if (redirectUri != null && !redirectUri.isBlank()) {
+            log.info("🔄 [redirect_uri 감지] → {}", redirectUri);
+            session.removeAttribute("redirect_uri"); // 일회성 사용
+            redirectStrategy.sendRedirect(request, response, redirectUri);
+            return;
+        }
+
+        // 3. 기본 리다이렉트 (마이페이지)
+        log.info("🔄 redirect_uri 없음 → 기본 /my 이동");
+        redirectStrategy.sendRedirect(request, response, "/my");
+
+    }
+}
+

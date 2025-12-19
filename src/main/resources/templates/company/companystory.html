@@ -1,0 +1,307 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 은행스토리 UI*UX 변경
+-->
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::은행스토리</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/company/_coheader.css}">
+    <link rel="stylesheet" th:href="@{/css/company/_cofooter.css}">
+    <link rel="stylesheet" th:href="@{/css/company/style_story.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+
+    <script th:src="@{/js/company/coGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{company/_coheader :: coHeaderFragment}"></div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="companystory-container story-container">
+            <!-- 페이지 타이틀 -->
+            <section class="story-header">
+                <h1>은행스토리</h1>
+                <p>딸깍은행의 다양한 소식과 이야기를 만나보세요</p>
+            </section>
+
+            <!-- 탭 네비게이션 -->
+            <section class="story-tabs">
+                <button class="tab-btn active" data-tab="press">보도자료</button>
+                <button class="tab-btn" data-tab="notice">공지사항</button>
+                <button class="tab-btn" data-tab="event">이벤트</button>
+            </section>
+
+            <!-- 보도자료 게시판 (블로그형 썸네일) -->
+            <section id="press" class="story-section active">
+                <div class="story-header-sub">
+                    <h2>보도자료</h2>
+                    <p>부산은행의 최신 소식을 전해드립니다</p>
+                </div>
+
+                <div class="press-grid">
+                    <!-- 보도자료 -->
+                    <article class="press-card" th:each="report : ${pageResponseDTO1.dtoList}">
+                        <div class="press-thumbnail">
+                            <img th:src="@{/uploads/{file}(file=${report.file})}" alt="보도 사진">
+                        </div>
+                        <div class="press-content">
+                            <div class="press-date" th:text="${report.createdAt.substring(2, 4) + '.' + report.createdAt.substring(5, 7) + '.' + report.createdAt.substring(8, 10)}"></div>
+                            <h3><a href="#">[[${report.title}]]</a></h3>
+                            <a th:href="@{/company/companystory/view(id=${report.id}, boardType=${report.boardType})}" class="read-more">자세히보기 →</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- 공지사항 게시판 -->
+            <section id="notice" class="story-section">
+                <div class="story-header-sub">
+                    <h2>공지사항</h2>
+                    <p>딸깍은행의 생생한 소식을 전해 드립니다.</p>
+                </div>
+
+                <div class="notice-table">
+                    <table>
+                        <colgroup>
+                            <col style="width: 8%;">
+                            <col style="width: auto;">
+                            <col style="width: 12%;">
+                            <col style="width: 8%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성일</th>
+                                <th>조회</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="notice-notice" th:each="notice, stat:${pageResponseDTO2.dtoList}">
+                                <td>[[${notice.id}]]</td>
+                                <td><a th:href="@{/company/companystory/view(id=${notice.id}, boardType=${notice.boardType})}">[[${notice.title}]]</a></td>
+                                <td th:text="${notice.createdAt.substring(2, 4) + '.' + notice.createdAt.substring(5, 7) + '.' + notice.createdAt.substring(8, 10)}"></td>
+                                <td>[[${notice.hit}]]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <!-- 이전 버튼 -->
+                    <a th:if="${pageResponseDTO2.prev}"
+                       th:href="@{/company/companystory(pg=${pageResponseDTO2.start - 1})}"
+                       class="prev">← 이전</a>
+
+                    <!-- 페이지 번호 -->
+                    <th:block th:if="${pageResponseDTO2.total > 0}"
+                              th:each="num : ${#numbers.sequence(pageResponseDTO2.start, pageResponseDTO2.end)}">
+                        <a th:href="@{/company/companystory(pg=${num})}"
+                           th:class="${num == pageResponseDTO2.pg ? 'page active' : 'page'}">
+                            [[${num}]]
+                        </a>
+                    </th:block>
+
+                    <!-- 다음 버튼 -->
+                    <a th:if="${pageResponseDTO2.next}"
+                       th:href="@{/company/companystory(pg=${pageResponseDTO2.end + 1})}"
+                       class="next">다음 →</a>
+                </div>
+            </section>
+
+            <!-- 이벤트 게시판 -->
+            <section id="event" class="story-section">
+                <div class="story-header-sub">
+                    <h2>이벤트</h2>
+                    <p>부산은행의 다양한 이벤트 소식을 확인하세요</p>
+                </div>
+
+                <div class="event-grid">
+                    <!-- 이벤트  -->
+                    <article class="event-card" th:each="event : ${pageResponseDTO3.dtoList}">
+                        <div class="event-thumbnail">
+                            <img th:src="@{/uploads/{file}(file=${event.file})}" alt="이벤트 상세 이미지">
+                        </div>
+                        <div class="event-content">
+                            <h3><a href="#">[[${event.title}]]</a></h3>
+                            <div class="event-period" th:text="${event.createdAt.substring(2, 4) + '.' + event.createdAt.substring(5, 7) + '.' + event.createdAt.substring(8, 10)}">
+                                <i class="xi-calendar"></i>
+                            </div>
+                            <a th:href="@{/company/companystory/view(id=${event.id}, boardType=${event.boardType})}" class="btn-event">자세히보기</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer 부분 -->
+    <div th:replace="~{company/_cofooter :: cofooterFragment(${appInfo})}"></div>
+
+    <script>
+        // Story Page JavaScript
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initTabNavigation();
+            initTopButton();
+            initLoadMore();
+        });
+
+        /**
+         * 탭 네비게이션 초기화
+         */
+        function initTabNavigation() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const sections = document.querySelectorAll('.story-section');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // 모든 버튼에서 active 제거
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // 모든 섹션 숨기기
+                    sections.forEach(section => section.classList.remove('active'));
+                    
+                    // 클릭된 버튼에 active 추가
+                    this.classList.add('active');
+                    
+                    // 해당하는 섹션 표시
+                    const activeSection = document.getElementById(tabName);
+                    if (activeSection) {
+                        activeSection.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        /**
+         * 더보기 버튼 기능
+         */
+        function initLoadMore() {
+            const loadMoreButtons = document.querySelectorAll('.btn-more');
+
+            loadMoreButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 로딩 상태 표시
+                    const originalText = this.textContent;
+                    this.textContent = '로딩 중...';
+                    this.disabled = true;
+                    this.classList.add('loading');
+
+                    // 시뮬레이션: 1초 후 처리
+                    setTimeout(() => {
+                        alert('더 많은 컨텐츠를 불러왔습니다!');
+                        this.textContent = originalText;
+                        this.disabled = false;
+                        this.classList.remove('loading');
+                    }, 1000);
+                });
+            });
+        }
+
+        /**
+         * 페이지네이션
+         */
+        function initPagination() {
+            const paginationLinks = document.querySelectorAll('.pagination a');
+
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const page = this.textContent;
+                    
+                    if (this.classList.contains('prev') || this.classList.contains('next')) {
+                        console.log('페이지 이동:', this.textContent);
+                    } else {
+                        console.log('선택된 페이지:', page);
+                        
+                        // 모든 페이지 링크에서 active 제거
+                        document.querySelectorAll('.pagination .page').forEach(p => {
+                            p.classList.remove('active');
+                        });
+                        
+                        // 현재 클릭된 페이지에 active 추가
+                        this.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        /**
+         * 이벤트 카드 클릭
+         */
+        function initEventCards() {
+            const eventButtons = document.querySelectorAll('.btn-event');
+
+            eventButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const eventTitle = this.closest('.event-card').querySelector('h3 a').textContent;
+                    console.log('이벤트 상세 페이지로 이동:', eventTitle);
+                    // 이벤트 상세페이지로 이동 로직
+                });
+            });
+        }
+
+        /**
+         * 보도자료 카드 클릭
+         */
+        function initPressCards() {
+            const pressButtons = document.querySelectorAll('.read-more');
+
+            pressButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pressTitle = this.closest('.press-card').querySelector('h3 a').textContent;
+                    console.log('보도자료 상세 페이지로 이동:', pressTitle);
+                    // 보도자료 상세페이지로 이동 로직
+                });
+            });
+        }
+
+        // 초기화 함수 실행
+        document.addEventListener('DOMContentLoaded', function() {
+            initTabNavigation();
+            initTopButton();
+            initLoadMore();
+            initNoticeTable();
+            initPagination();
+            initEventCards();
+            initPressCards();
+        });
+
+        // 검색 기능 (선택)
+        function searchStory(keyword) {
+            console.log('검색 키워드:', keyword);
+            // 검색 로직 구현
+        }
+
+        // 필터 기능 (선택)
+        function filterByCategory(category) {
+            console.log('필터 카테고리:', category);
+            // 필터 로직 구현
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- 로그인 여부, 권한 처리 시 필요 -->
+<html lang="en"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>딸깍은행::회원</title>
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Member.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/member/openModal.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+    <script th:src="@{/js/member/chatbot.js}" defer></script>
+</head>
+<body th:classappend="${#authorization.expr('isAuthenticated()')} ? 'logged-in' : ''">
+<!-- Header 부분 -->
+<div th:replace="~{_header :: headerFragment}"></div>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>딸깍은행::관리자 이메일 상담 보기</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_emailCounselView.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <div class="main-right">
+            <div class="faq_title">
+                <span class="title_sp">관리자 이메일 상담 보기</span>
+            </div>
+
+            <div class="event-card">
+                <!-- 제목 영역 -->
+                <div class="event-title-section">
+                    <span class="category-badge">[[${emailCounselDTO.csCategoryName}]]</span>
+                    <h2 class="event-title-text">[[${emailCounselDTO.title}]]</h2>
+                </div>
+
+                <!-- 질문 영역 -->
+                <div class="div_sp">
+                    <div class="content-label">
+                        <span class="label-icon">Q</span>
+                        <span class="label-text">고객 질문</span>
+                    </div>
+                    <span class="sp_content sp_question">[[${emailCounselDTO.content}]]</span>
+                </div>
+
+                <!-- 답변 영역 -->
+                <div class="div_sp">
+                    <div class="content-label">
+                        <span class="label-icon label-icon-answer">A</span>
+                        <span class="label-text">관리자 답변</span>
+                    </div>
+                    <span class="sp_content sp_answer">[[${emailCounselDTO.response}]]</span>
+                </div>
+
+                <!-- 버튼 영역 -->
+                <div class="button-group">
+                    <button class="btn btn-list" th:onclick="|location.href='@{/admin/counsel/list}'|">목록</button>
+                    <button class="btn btn-edit" th:onclick="|location.href='@{/admin/counsel/modify(ecounselId=${emailCounselDTO.ecounselId})}'|">수정</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

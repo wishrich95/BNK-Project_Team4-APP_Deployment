@@ -1,0 +1,462 @@
+<!--
+    수정일 : 2025/11/29
+    수정자 : 천수빈
+    내용 : 투자자정보 UI*UX 변경
+-->
+
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::투자자정보</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/company/_coheader.css}">
+    <link rel="stylesheet" th:href="@{/css/company/_cofooter.css}">
+    <link rel="stylesheet" th:href="@{/css/company/style_invest.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+
+    <script th:src="@{/js/company/coGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{company/_coheader :: coHeaderFragment}"></div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <section class="page-section">
+            <div class="container">
+                <div class="investor-header">
+                    <h1>투자자정보</h1>
+                    <p>부산은행의 투자자 공시 정보를 제공합니다</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" style="padding-top: 30px; padding-bottom: 0;">
+            <div class="container">
+                <div class="investor-tabs">
+                    <button class="investor-tab-btn active" data-tab="disclosure">경영공시</button>
+                    <button class="investor-tab-btn" data-tab="basel3">바젤3 자본공시</button>
+                    <button class="investor-tab-btn" data-tab="notice">공고</button>
+                    <button class="investor-tab-btn" data-tab="credit">신용등급</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 경영공시 -->
+        <section class="page-section board-section active" id="disclosure" data-board="disclosure">
+            <div class="container">
+                <div class="board-header">
+                    <h2>경영공시</h2>
+                </div>
+                <div class="board-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>첨부파일</th>
+                                <th>등록일</th>
+                            </tr>
+                        </thead>
+                        <tbody class="disclosure-board">
+                            <tr th:each="invest, stat:${pageResponseDTO.dtoList}" th:if="${invest.investType == 'management'}">
+                                <td>[[${invest.id}]]</td>
+                                <td>[[${invest.title}]]</td>
+                                <td>
+                                    <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${invest.file})}" onclick="window.open(this.dataset.url, '_blank')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                                        </svg>
+                                    </button>
+                                </td>
+                                <td th:text="${invest.createdAt.substring(2, 4) + '.' + invest.createdAt.substring(5, 7) + '.' + invest.createdAt.substring(8, 10)}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 바젤3 자본공시 -->
+        <section class="page-section board-section" id="basel3" data-board="basel3">
+            <div class="container">
+                <div class="board-header">
+                    <h2>바젤3 자본공시</h2>
+                </div>
+                <div class="board-list">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>첨부파일</th>
+                            <th>등록일</th>
+                        </tr>
+                        </thead>
+                        <tbody class="basel3-board">
+                            <tr th:each="invest, stat:${pageResponseDTO.dtoList}" th:if="${invest.investType == 'basel'}">
+                                <td>[[${invest.id}]]</td>
+                                <td>[[${invest.title}]]</td>
+                                <td>
+                                    <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${invest.file})}" onclick="window.open(this.dataset.url, '_blank')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                                        </svg>
+                                    </button>
+                                </td>
+                                <td th:text="${invest.createdAt.substring(2, 4) + '.' + invest.createdAt.substring(5, 7) + '.' + invest.createdAt.substring(8, 10)}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 공고 -->
+        <section class="page-section board-section" id="notice" data-board="notice">
+            <div class="container">
+                <div class="board-header">
+                    <h2>공고</h2>
+                </div>
+                <div class="board-list">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>첨부파일</th>
+                            <th>등록일</th>
+                        </tr>
+                        </thead>
+                        <tbody class="notice-board">
+                            <tr th:each="invest, stat:${pageResponseDTO.dtoList}" th:if="${invest.investType == 'announcement'}">
+                                <td>[[${invest.id}]]</td>
+                                <td>[[${invest.title}]]</td>
+                                <td>
+                                    <button class="sd-ico-btn" th:attr="data-url=@{/uploads/{f}(f=${invest.file})}" onclick="window.open(this.dataset.url, '_blank')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zM5 18h14v2H5z"/>
+                                        </svg>
+                                    </button>
+                                </td>
+                                <td th:text="${invest.createdAt.substring(2, 4) + '.' + invest.createdAt.substring(5, 7) + '.' + invest.createdAt.substring(8, 10)}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 신용등급 -->
+        <section class="page-section board-section" id="credit" data-board="credit">
+            <div class="container">
+                <div class="board-header">
+                    <h2>당행 국내외 신용등급</h2>
+                </div>
+                <table class="static-table">
+                    <thead>
+                    <tr>
+                        <th>구분</th>
+                        <th>신용평가기관</th>
+                        <th>장기채권</th>
+                        <th>단기채권</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td rowspan="3"><strong>국내</strong></td>
+                        <td>NICE신용평가</td>
+                        <td><strong>AAA</strong></td>
+                        <td><strong>AA</strong></td>
+                    </tr>
+                    <tr>
+                        <td>한국기업평가</td>
+                        <td><strong>AAA</strong></td>
+                        <td><strong>AA</strong></td>
+                    </tr>
+                    <tr>
+                        <td>한국신용평가</td>
+                        <td><strong>AAA</strong></td>
+                        <td><strong>AA</strong></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2"><strong>해외</strong></td>
+                        <td>Moody's</td>
+                        <td><strong>A2</strong></td>
+                        <td><strong>P-1</strong></td>
+                    </tr>
+                    <tr>
+                        <td>S&P</td>
+                        <td><strong>A-</strong></td>
+                        <td><strong>A-2</strong></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-title">국내 신용평가 등급체계</div>
+                <table class="static-table">
+                    <thead>
+                    <tr>
+                        <th>신용등급</th>
+                        <th>등급정의</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>AAA</strong></td>
+                        <td>채무상환능력이 최고 수준이며, 예측 가능한 장래의 환경변화에 영향을 받지 않을만큼 안정적이다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AA</strong></td>
+                        <td>채무상환능력이 매우 우수하며, 예측 가능한 장래의 환경변화에 영향을 받을가능성이 낮다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A</strong></td>
+                        <td>채무상환능력이 우수하지만, 장래의 환경변화에 영향을 받을 가능성이 상위 등급에 비해서는 높다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BBB</strong></td>
+                        <td>채무상환능력이 있으나, 장래의 환경변화에 따라 저하될 가능성이 내포되어 있다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BB</strong></td>
+                        <td>최소한의 채무상환능력은 인정되나, 장래의 안정성면에서는 투기적 요소가 내포되어 있다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>B</strong></td>
+                        <td>채무상환능력이 부족하며, 그 안정성이 가변적이어서 매우 투기적이다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CCC</strong></td>
+                        <td>채무불이행이 발생할 가능성이 높다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CC</strong></td>
+                        <td>채무불이행이 발생할 가능성이 매우 높다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>C</strong></td>
+                        <td>채무불이행이 발생할 가능성이 극히 높고, 합리적인 예측 범위 내에서 채무불이행 발생이 불가피하다.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>D</strong></td>
+                        <td>현재 채무불이행 상태에 있다.</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 12px; color: var(--gray-600); margin-top: 15px; padding: 10px; background: var(--bg-light); border-radius: 6px;">
+                    * 해당 등급체계는 한국기업평가의 자료이며, 타 국내 신용평가기관 동일한 등급체계 및 순서로 평가함
+                </p>
+
+                <div class="section-title" style="margin-top: 40px;">해외 신용평가 등급체계</div>
+
+                <div class="section-subtitle">장기 신용등급</div>
+                <table class="static-table">
+                    <thead>
+                    <tr>
+                        <th>구분</th>
+                        <th>Moody's</th>
+                        <th>S&P</th>
+                        <th>신용등급 내용</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr style="background: #e8f4f8;">
+                        <td rowspan="4"><strong>투자적격<br/>등급</strong></td>
+                        <td>Aaa</td>
+                        <td>AAA</td>
+                        <td>원리금 지급의 안정성이 제일 높음 (Best)</td>
+                    </tr>
+                    <tr>
+                        <td>Aa1, Aa2, Aa3</td>
+                        <td>AA+, AA, AA-</td>
+                        <td>Aaa보다는 낮으나 높은 등급으로 평가됨 (High Quality)</td>
+                    </tr>
+                    <tr>
+                        <td>A1, A2, A3</td>
+                        <td>A+, A, A-</td>
+                        <td>현재 안정성은 적당하나 향후 악화될 가능성이 있음 (Upper-Medium Grade)</td>
+                    </tr>
+                    <tr>
+                        <td>Baa1, Baa2, Baa3</td>
+                        <td>BBB+, BBB, BBB-</td>
+                        <td>현재 원리금지급은 가능하나 향후 안정성은 부족함 (Medium Grade)</td>
+                    </tr>
+                    <tr style="background: #fef3e8;">
+                        <td rowspan="5"><strong>투기<br/>등급</strong></td>
+                        <td>Ba1, Ba2, Ba3</td>
+                        <td>BB+, BB, BB-</td>
+                        <td>원리금 지급의 안정성은 중간이며, 투기적 요소가 있음 (Partially Speculative)</td>
+                    </tr>
+                    <tr>
+                        <td>B1, B2, B3</td>
+                        <td>B+, B, B-</td>
+                        <td>원리금 지급의 안정성이 낮음 (Speculative)</td>
+                    </tr>
+                    <tr>
+                        <td>Caa1, Caa2, Caa3</td>
+                        <td>CCC+, CCC, CCC-</td>
+                        <td>지급불능의 가능성이 있음 (Maybe in Default)</td>
+                    </tr>
+                    <tr>
+                        <td>Ca</td>
+                        <td>CC</td>
+                        <td>지급불능의 가능성이 큼 (Often in Default)</td>
+                    </tr>
+                    <tr style="background: #ffe0e0;">
+                        <td>C</td>
+                        <td>D</td>
+                        <td>최저등급 (Extremely Poor) / 부도등급 혹은 부도가능성 (Bankruptcy)</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-subtitle">단기 신용등급</div>
+                <table class="static-table">
+                    <thead>
+                    <tr>
+                        <th>구분</th>
+                        <th>Moody's</th>
+                        <th>S&P</th>
+                        <th>신용등급 내용</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr style="background: #e8f4f8;">
+                        <td rowspan="3"><strong>투자적격<br/>등급</strong></td>
+                        <td>P-1 (Prime-1)</td>
+                        <td>A-1+, A-1</td>
+                        <td>단기상환능력이 매우 우수</td>
+                    </tr>
+                    <tr>
+                        <td>P-2 (Prime-2)</td>
+                        <td>A-2</td>
+                        <td>Prime-1보다는 낮으나 높은 등급으로 평가됨. 경제상황 및 영업여건에 따라 영향을 받을 가능성이 높음</td>
+                    </tr>
+                    <tr>
+                        <td>P-3 (Prime-3)</td>
+                        <td>A-3</td>
+                        <td>현재의 단기상환능력은 적당하나 향후 악화될 가능성이 매우 높음</td>
+                    </tr>
+                    <tr style="background: #fef3e8;">
+                        <td><strong>투기<br/>등급</strong></td>
+                        <td>NP (Not Prime)</td>
+                        <td>B, B-1, B-2, B-3</td>
+                        <td>단기 지급능력이 의심되는 투기등급</td>
+                    </tr>
+                    <tr style="background: #ffe0e0;">
+                        <td><strong>부도<br/>등급</strong></td>
+                        <td>C / SD 및 D</td>
+                        <td>-</td>
+                        <td>단기채무 지급불능 가능성 / 부도등급 혹은 부도가능성</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-title" style="margin-top: 40px;">등급변동내역</div>
+                <table class="static-table">
+                    <thead>
+                    <tr>
+                        <th>변동일자</th>
+                        <th colspan="2">Moody's</th>
+                        <th colspan="2">S&P</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>장기</th>
+                        <th>단기</th>
+                        <th>장기</th>
+                        <th>단기</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>2011.3.15</td>
+                        <td>A2</td>
+                        <td>P-1</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>2011.9.28</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>2016.2.26</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>BBB+</td>
+                        <td>A-2</td>
+                    </tr>
+                    <tr>
+                        <td>2016.8.8</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>A-</td>
+                        <td>A-2</td>
+                    </tr>
+                    <tr style="background: #e8f4f8; font-weight: 600;">
+                        <td>현재등급</td>
+                        <td>A2</td>
+                        <td>P-1</td>
+                        <td>A-</td>
+                        <td>A-2</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 14px; color: var(--gray-600); margin-top: 15px; padding: 10px; background: var(--bg-light); border-radius: 6px;">
+                    * BNK금융지주 설립 이후(2011.3.15)부터 기재<br/>
+                    * 국내 신용평가(3사) : 장기 및 단기 모두 AAA등급임
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer 부분 -->
+    <div th:replace="~{company/_cofooter :: cofooterFragment(${appInfo})}"></div>
+
+    <script>
+        // 게시판 데이터
+        const boardData = {
+            disclosure: [],
+            basel3: [],
+            notice: []
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initTabNavigation();
+        });
+
+        // 탭 네비게이션
+        function initTabNavigation() {
+            const buttons = document.querySelectorAll('.investor-tab-btn');
+            const sections = document.querySelectorAll('.board-section');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tab = btn.getAttribute('data-tab');
+
+                    buttons.forEach(b => b.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+
+                    btn.classList.add('active');
+                    document.getElementById(tab).classList.add('active');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+* {  /* 공통 세팅 */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.main-right { /* 오른쪽 레이아웃 */
+    background: #FFE9EA 0% 0% no-repeat padding-box;
+    height: 1080px;
+    left: 360px;
+    opacity: 1;
+    top: 0px;
+    width: 1560px;
+}
+
+.main_grape {
+    box-shadow: 0px 4px 10px #00000029;
+    height: 475px;
+    position: absolute;
+    width: 470px;
+}
+.main_grape_title { /* 제목 */
+    align-items: center;
+    background: #FFF6F7 0% 0% no-repeat padding-box;
+    border-bottom: 2px solid #FFB9BD;
+    border-radius: 5px 5px 0px 0px;
+    display: flex;
+    height: 70px;
+    justify-content: space-between;
+}
+.main_grape_title1 {width: 470px;} /* 제목크기 */
+.main_grape_title2 {width: 965px;}
+.menu_sp { /* 제목 텍스트 */
+    font: normal normal 600 20px/24px Pretendard;
+    padding-left: 30px;
+}
+.menu_text_btn { /* 상세보기 버튼 */
+    background-color: #FFF6F7;
+    border:none;
+    cursor: pointer;
+    padding-right:30px;
+}
+.move_img { /* 상세보기 이미지 */
+    height: 24px;
+    width: 24px;
+}
+.main_content { /* 내부내용 */
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-radius: 0px 0px 5px 5px;
+    height:405px;
+    padding: 20px;
+    width:470px;
+}
+
+.chart-timestamp { /* 현재 시간 */
+    display: block;
+    font: normal normal 14px/16px Pretendard;
+    color: #666666;
+    margin-bottom: 25px;
+}
+.chart-wrapper { /* 그래프 */
+    height: 300px;
+    width: 100%;
+    position: relative;
+}
+
+.content_title { /* 판매상품 제목 틀 */
+    display: flex;
+    height: 16px;
+    justify-content: space-between;
+    width: 430px;
+}
+.content_title_sp { /* 판매상품 제목 텍스트 */
+    color:#666666;
+    font-family: Pretendard;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+}
+
+.content_li {
+    border-bottom: 1px solid #00000029;
+    display:flex;
+    justify-content: space-between;
+}
+.content_a_sp {
+    color: #666666;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-size: 13px;
+    font-family: Pretendard;
+    line-height: 16px;
+    margin-bottom: 12.5px;
+    margin-top: 13px;
+    text-decoration: none;
+}
+
+.main_grape1 {
+    left: 410px;
+    top: 50px;
+}
+.main_grape2 {
+    left: 905px;
+    top: 50px;
+}
+.main_grape3 {
+    left: 1400px;
+    top: 50px;
+}
+.main_grape4 {
+    left: 410px;
+    top: 555px;
+}
+.main_grape5 {
+    left: 1400px;
+    top: 555px;
+}
+
+.main_content2 { /* 내부내용 */
+    align-items: center;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-radius: 0px 0px 5px 5px;
+    display: flex;
+    height:405px;
+    justify-content: center;
+    padding: 20px;
+    width:965px;
+}
+.menu_sp2 {
+    color:#666666;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: Pretendard;
+    line-height: 16px;
+    margin-left: 12px;
+}
+.consultation_title {
+    color:#E1545A;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: Pretendard;
+    line-height: 16px;
+    margin-bottom: 16px;
+}
+.chart-wrapper2 { /* 그래프 */
+    height: 271px;
+    width: 250px;
+    position: relative;
+}

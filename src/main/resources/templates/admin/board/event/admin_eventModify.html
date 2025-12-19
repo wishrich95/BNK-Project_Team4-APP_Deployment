@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>딸깍은행::이벤트 수정</title>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_category.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/admin_eventModify.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}"> <!-- 공용 폰트 -->
+    <script th:src="@{/js/admin/admin_category.js}"></script>
+    <script th:src="@{/js/admin/admin_eventWrite.js}"></script>
+    <script>
+        function deleteImage() {
+            // 기존 이미지 영역 삭제
+            const imageWrapper = document.querySelector(".image-wrapper");
+            if (imageWrapper) {
+                imageWrapper.remove();
+            }
+
+            // 숨겨둔 textarea / 업로드 영역 표시
+            document.getElementById("contentGroup").classList.remove("hidden");
+            document.getElementById("uploadGroup").classList.remove("hidden");
+        }
+    </script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <!-- 왼쪽 사이드바 - Fragment 사용 -->
+        <div th:replace="~{admin/_adminSidebar :: sidebar}"></div>
+
+        <div class="main-right">
+            <div class="faq_title">
+                <span class="title_sp">이벤트 수정</span>
+            </div>
+
+            <form th:action="@{/admin/event/modify}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" th:value="${boardDTO.id}">
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <input
+                        type="text" name="title"
+                        class="form-input" placeholder="이벤트 제목을 입력하세요"
+                        maxlength="100" th:value="${boardDTO.title}">
+                </div>
+
+                <!-- 이미지 영역 -->
+                <div class="event-content" id="eventContent" onclick="deleteImage()">
+                    <div class="image-wrapper">
+                        <img
+                            th:src="@{/uploads/{file}(file=${boardDTO.file})}"
+                            alt="이벤트 상세 이미지"
+                            id="eventImage">
+                    </div>
+                </div>
+                <!-- 삭제 후 보이게 될 내용 입력 영역 (초기에는 숨김) -->
+                <div class="form-group hidden" id="contentGroup">
+                    <label class="form-label">내용</label>
+                    <textarea
+                        name="content" id="content"
+                        class="form-textarea" placeholder="이벤트 내용을 상세히 작성해주세요"></textarea>
+                </div>
+
+                <!-- 삭제 후 보이게 될 업로드 영역 (초기에는 숨김) -->
+                <div class="form-group hidden" id="uploadGroup">
+                    <label class="form-label">첨부 이미지</label>
+                    <p class="form-description">이벤트 배너 또는 상세 이미지를 업로드하세요 (최대 10MB)</p>
+
+                    <div class="file-upload-wrapper">
+                        <label for="uploadFile" class="file-upload-area" id="fileUploadArea">
+                            <div class="file-upload-icon">📁</div>
+                            <div class="file-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                            <div class="file-upload-hint">JPG, PNG, GIF (최대 10MB)</div>
+                        </label>
+
+                        <input type="file" name="uploadFile" id="uploadFile" accept="image/*">
+
+                        <div class="file-preview" id="filePreview">
+                            <div class="file-info">
+                                <div class="file-name" id="fileName"></div>
+                                <div class="file-size" id="fileSize"></div>
+                            </div>
+                            <button type="button" class="file-remove" id="fileRemove">✕</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" onclick="history.back()">취소하기</button>
+                    <button type="submit" class="btn btn-submit">등록하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

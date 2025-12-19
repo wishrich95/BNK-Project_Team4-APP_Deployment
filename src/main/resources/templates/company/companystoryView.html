@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!--
+    작성자: 윤종인
+    작성일: 2025-11-28
+    설명: 은행소개 - 은행스토리 페이지 보기 기능
+-->
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::은행스토리</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/company/_coheader.css}">
+    <link rel="stylesheet" th:href="@{/css/company/_cofooter.css}">
+    <link rel="stylesheet" th:href="@{/css/company/style_storyView.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+
+    <script th:src="@{/js/company/coGlobalBtn.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{company/_coheader :: coHeaderFragment}"></div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="view-container story-container">
+            <!-- 페이지 타이틀 -->
+            <section class="story-header">
+                <h1>은행스토리</h1>
+                <p>딸깍은행의 다양한 소식과 이야기를 만나보세요</p>
+            </section>
+
+            <!-- 보도자료, 공지사항 게시판 -->
+            <section id="notice" class="story-section">
+                <div class="story-header-sub">
+                    <h2>공지사항</h2>
+                    <p>딸깍은행의 생생한 소식을 전해 드립니다.</p>
+                </div>
+
+                <div class="event-card">
+                    <!-- 제목 영역 -->
+                    <div class="event-title-section">
+                        <h2 class="event-title-text">[[${boardDTO.title}]]</h2>
+                    </div>
+
+                    <!-- 이미지 영역 -->
+                    <div class="event-content" id="eventContent">
+                        <div class="image-wrapper" th:if="${boardDTO.file != null}">
+                            <img th:src="@{/uploads/{file}(file=${boardDTO.file})}" alt="보도 사진">
+                        </div>
+                    </div>
+
+                    <div class="div_sp" th:if="${boardDTO.content != null and boardDTO.content != ''}">
+                        <span class="sp_content">[[${boardDTO.content}]]</span>
+                    </div>
+                    <!-- 버튼 영역 -->
+                    <div class="button-group">
+                        <button class="btn btn-list" onclick="history.back()">목록</button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer 부분 -->
+    <div th:replace="~{company/_cofooter :: cofooterFragment(${appInfo})}"></div>
+</body>
+</html>

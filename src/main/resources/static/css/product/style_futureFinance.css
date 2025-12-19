@@ -1,0 +1,658 @@
+/*
+    수정일 : 2025/12/05
+    수정자 : 천수빈
+    내용 : 금융감정분석 페이지
+*/
+
+/* AI 분석 영역 */
+.ai-analysis-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    margin: 50px 0 80px 0;
+    padding: 60px 60px 40px 60px;
+    background-color: #FFFFFF;
+    border: 3px solid transparent;
+    border-radius: 10px;
+    background-image:
+            linear-gradient(#fff, #fff),
+            linear-gradient(
+                    90deg,
+                    #7c3aed 0%,
+                    #d946ef 25%,
+                    #7c3aed 50%,
+                    #d946ef 75%,
+                    #7c3aed 100%
+            );
+    background-origin: padding-box, border-box;
+    background-clip: padding-box, border-box;
+    background-size: auto, 200% 100%;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    animation: flowGradient 3s linear infinite;
+}
+
+@keyframes flowGradient {
+    0% {
+        background-position: 0 50%, 0 50%;
+    }
+    100% {
+        background-position: 0 50%, 200% 50%;
+    }
+}
+
+.ai-analysis-section .ai-back-l {
+    position: absolute;
+    top: -35px;
+    left: -12px;
+    width: auto;
+    height: 410px;
+    object-fit: cover;
+    /*opacity: 0.1;*/
+    z-index: 0;
+}
+
+.ai-analysis-section .ai-back-r {
+    position: absolute;
+    top: -6px;
+    right: -368px;
+    width: auto;
+    height: 580px;
+    object-fit: cover;
+    /*opacity: 0.1;*/
+    z-index: 0;
+    transform: scaleX(-1)
+}
+
+.ai-analysis {
+    position: relative;
+    z-index: 10;
+}
+
+.ai-analysis-title {
+
+    font-size: 45px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+
+.ai-analysis-desc {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--grey-900);
+    margin-bottom: 50px;
+}
+
+.ai-analysis-desc strong {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.ai-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.ai-url-input {
+    flex: 1;
+    width: auto;
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: 400;
+    border-radius: 6px;
+    border: 1px solid var(--grey-500);
+}
+
+.ai-analyze-btn {
+    background: linear-gradient(135deg, #7c3aed, #6A1B9A);
+    color: #ffffff;
+    width: 240px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-size: 26px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ai-analyze-btn:hover {
+    background: #6A1B9A;
+}
+
+.ai-image-upload-wrap {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    column-gap: 10px;
+    margin-top: 15px;
+}
+
+.ai-image-upload-btn {
+    background: #ffffff;
+    border: 1px solid var(--grey-500);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 500;
+    width: 240px;
+    height: 57px;
+    color: var(--grey-700);
+    cursor: pointer;
+}
+
+.ai-image-upload-btn:hover {
+    background: var(--purple-100);
+    border: 1px solid var(--purple-900);
+    font-weight: 600;
+    color: var(--purple-900);
+}
+
+.ai-preview-image {
+    display: none;
+    margin-top: 0;
+    max-width: 340px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+}
+
+.ai-analysis-result {
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--grey-900);
+}
+
+.ai-analysis-result h3 {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 50px 0 10px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.ai-analysis-result strong {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 10px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.ai-recommended-products {
+    margin-top: 20px;
+}
+
+/* 상품 리스트 영역 */
+.product .meta {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+.product .prod-info {
+    flex: 1;
+}
+
+.product .prod-info h3 {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--grey-700);
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.product .prod-info p {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--grey-700);
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.btn-round-main {
+    background: #5a67d8;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.btn-round-main:hover {
+    background: #4c5bc7;
+}
+
+.list-wrap {
+    border-bottom: none;
+}
+
+/* 모달 창 */
+.analysis-modal {
+    display: none;
+}
+
+.analysis-modal .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/*.analysis-modal .close {*/
+/*    position: absolute;*/
+/*    top: 20px;*/
+/*    right: 20px;*/
+/*    background: none;*/
+/*    border: none;*/
+/*    font-size: 24px;*/
+/*    cursor: pointer;*/
+/*    color: #999;*/
+/*}*/
+
+/*.analysis-modal .close:hover {*/
+/*    color: #333;*/
+/*}*/
+
+.modal-content-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.modal-image {
+    width: 220px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.modal-info {
+    flex: 1;
+}
+
+/*.modal-title {*/
+/*    margin: 0 0 12px 0;*/
+/*}*/
+
+.modal-url {
+    color: #888;
+    margin-bottom: 16px;
+}
+
+.modal-meta {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 8px;
+}
+
+.modal-divider {
+    height: 2px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    margin: 30px 0;
+}
+
+.modal-section-title {
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.modal-summary {
+    white-space: pre-wrap;
+}
+
+.modal-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* JavaScript로 동적 생성되는 요소들 */
+.prod-name {
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.prod-desc {
+    font-size: 13px;
+    color: #666;
+}
+
+.prod {
+    padding: 16px;
+    margin: 10px 0;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+/* 감정 팝업 */
+.sentiment-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
+    font-size: 24px;
+    font-weight: 700;
+    border-radius: 12px;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.sentiment-popup.positive {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.sentiment-popup.negative {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.sentiment-popup.neutral {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* ✅ 모달 크기 키우기 */
+.analysis-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+}
+.analysis-modal .backdrop {
+    position: absolute;
+    inset:0;
+    background: rgba(0,0,0,0.6);
+}
+.analysis-modal .panel {
+    position: absolute;
+    top: 58%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 95%;
+    max-width: 1100px;
+    max-height: 76vh;
+    overflow: auto;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    background: #fff;
+    border-radius: 15px;
+    padding: 50px 40px;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.3);
+    z-index: 1000;
+}
+.analysis-modal .close {
+    position: absolute;
+    right: 25px;
+    top: 20px;
+    background: transparent;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #666;
+}
+.analysis-modal .close:hover {
+    color:#333;
+}
+
+/* 모달 내부 글자 크기 키우기 */
+.analysis-modal h3 {
+    font-size: 34px;
+    margin: 0 0 15px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+.analysis-modal h4 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 50px 0 13px 0;
+    color: var(--grey-900);
+}
+.analysis-modal p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #444;
+}
+.analysis-modal #modalUrl {
+    font-size: 18px;
+}
+.analysis-modal #modalSummary {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.6;
+    word-break: keep-all;
+    overflow-wrap: break-word;;
+}
+
+/* ✅ 키워드 배지 스타일 개선 (파란색~보라색) */
+.keyword-badge {
+    padding: 10px 15px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    font-size: 18px;
+    display: inline-block;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.5);
+}
+
+/* ✅ 추천 상품 카드 크게 + 스타일 개선 */
+.product-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 15px 0 20px 0;
+    padding: 25px 20px;
+
+    border: 2px solid #e5e7ff;
+    border-radius: 10px;
+    gap: 30px;
+
+    background: linear-gradient(135deg, #f5f7ff 0%, #faf5ff 100%);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+}
+.product-card .prod-name {
+    font-size: 28px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.product-card .prod-desc {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #666;
+    margin-top: 8px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+.product-card a {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 5px;
+    text-decoration:none;
+    font-size: 20px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+.product-card a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* ✅ 페이지 본문 추천 상품도 크게 */
+#recommendedProducts {
+    margin-top: 40px;
+}
+
+#recommendedProducts h3 {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 20px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#recommendedProducts .prod {
+    border: 2px solid #e5e7ff;
+    padding: 35px 100px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #f5f7ff 0%, #faf5ff 100%);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+#recommendedProducts .prod:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+}
+#recommendedProducts .prod > div:first-child {
+    font-size: 26px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+#recommendedProducts .prod > div:nth-child(2) {
+    font-size: 18px; !important;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #666;
+    margin-top: 10px;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+#recommendedProducts .prod a {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    margin-top: 20px;
+    width: 200px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+#recommendedProducts .prod a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* ✅ 감정 팝업 애니메이션 */
+.sentiment-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 80px;
+    font-weight: 900;
+    padding: 40px 60px;
+    border-radius: 24px;
+    z-index: 2000;
+    animation: popupAnimation 2s ease-out forwards;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.sentiment-popup.positive {
+    background: linear-gradient(135deg, #667eea 0%, #4c6ef5 100%);
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+
+.sentiment-popup.negative {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+
+.sentiment-popup.neutral {
+    background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+
+@keyframes popupAnimation {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    10% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    20% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    80% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+}
+
+/* ✅ 감정 분석 결과 스타일 */
+#modalSentiment {
+    font-size: 20px;
+    padding: 25px;
+    border-radius: 8px;
+    background: var(--grey-100);
+}
+#modalSentiment strong {
+    font-size: 24px;
+    color: var(--purple-900);
+}

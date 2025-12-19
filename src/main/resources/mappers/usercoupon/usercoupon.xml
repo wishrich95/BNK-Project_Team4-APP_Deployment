@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    작성자: 진원
+    작성일: 2025-11-28
+    설명: 사용자 쿠폰 Mapper XML
+-->
+<mapper namespace="kr.co.busanbank.mapper.UserCouponMapper">
+
+    <!-- 사용자 쿠폰 등록 -->
+    <insert id="insertUserCoupon" parameterType="kr.co.busanbank.dto.UserCouponDTO">
+        <selectKey keyProperty="userCouponId" resultType="int" order="BEFORE">
+            SELECT SEQUSERCOUPON.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO USERCOUPON (
+            USERCOUPONID, USERID, COUPONID, ISSUEDDATE,
+            STATUS, CREATEDAT
+        ) VALUES (
+            #{userCouponId}, #{userId}, #{couponId}, SYSDATE,
+            'UNUSED', SYSDATE
+        )
+    </insert>
+
+    <!-- 사용자가 보유한 쿠폰 목록 조회 -->
+    <select id="selectUserCouponsByUserId" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            uc.USERCOUPONID as userCouponId,
+            uc.USERID as userId,
+            uc.COUPONID as couponId,
+            uc.ISSUEDDATE as issuedDate,
+            uc.USEDDATE as usedDate,
+            uc.PRODUCTNO as productNo,
+            uc.STATUS as status,
+            uc.CREATEDAT as createdAt,
+            uc.UPDATEDAT as updatedAt,
+            c.COUPONCODE as couponCode,
+            c.COUPONNAME as couponName,
+            c.RATEINCREASE as rateIncrease,
+            c.VALIDTO as validTo,
+            p.PRODUCTNAME as productName
+        FROM USERCOUPON uc
+        INNER JOIN COUPON c ON uc.COUPONID = c.COUPONID
+        LEFT JOIN PRODUCT p ON uc.PRODUCTNO = p.PRODUCTNO
+        WHERE uc.USERID = #{userId}
+        ORDER BY uc.CREATEDAT DESC
+    </select>
+
+    <!-- 사용자의 특정 쿠폰 조회 -->
+    <select id="selectUserCouponById" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            uc.USERCOUPONID as userCouponId,
+            uc.USERID as userId,
+            uc.COUPONID as couponId,
+            uc.ISSUEDDATE as issuedDate,
+            uc.USEDDATE as usedDate,
+            uc.PRODUCTNO as productNo,
+            uc.STATUS as status,
+            uc.CREATEDAT as createdAt,
+            uc.UPDATEDAT as updatedAt,
+            c.COUPONCODE as couponCode,
+            c.COUPONNAME as couponName,
+            c.RATEINCREASE as rateIncrease
+        FROM USERCOUPON uc
+        INNER JOIN COUPON c ON uc.COUPONID = c.COUPONID
+        WHERE uc.USERCOUPONID = #{userCouponId}
+    </select>
+
+    <!-- 쿠폰 코드로 쿠폰 정보 조회 -->
+    <select id="selectCouponByCode" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            c.COUPONID as couponId,
+            c.COUPONCODE as couponCode,
+            c.COUPONNAME as couponName,
+            c.DESCRIPTION as description,
+            c.RATEINCREASE as rateIncrease,
+            c.MAXUSAGECOUNT as maxUsageCount,
+            c.CURRENTUSAGECOUNT as currentUsageCount,
+            c.VALIDFROM as validFrom,
+            c.VALIDTO as validTo,
+            c.ISACTIVE as isActive
+        FROM COUPON c
+        WHERE c.COUPONCODE = #{couponCode}
+          AND c.STATUS = 'Y'
+          AND c.ISACTIVE = 'Y'
+    </select>
+
+    <!-- 사용자가 이미 해당 쿠폰을 등록했는지 확인 -->
+    <select id="countUserCouponByUserIdAndCouponId" resultType="int">
+        SELECT COUNT(*)
+        FROM USERCOUPON
+        WHERE USERID = #{userId}
+          AND COUPONID = #{couponId}
+    </select>
+
+    <!-- 쿠폰 사용 처리 -->
+    <update id="updateUserCouponUsed">
+        UPDATE USERCOUPON
+        SET STATUS = 'USED',
+            USEDDATE = SYSDATE,
+            PRODUCTNO = #{productNo},
+            UPDATEDAT = SYSDATE
+        WHERE USERCOUPONID = #{userCouponId}
+    </update>
+
+    <!-- 사용 가능한 쿠폰 개수 조회 -->
+    <select id="countAvailableCouponsByUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM USERCOUPON uc
+        INNER JOIN COUPON c ON uc.COUPONID = c.COUPONID
+        WHERE uc.USERID = #{userId}
+          AND uc.STATUS = 'UNUSED'
+          AND SYSDATE <![CDATA[<=]]> c.VALIDTO
+    </select>
+
+    <!-- 사용한 쿠폰 개수 조회 -->
+    <select id="countUsedCouponsByUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM USERCOUPON
+        WHERE USERID = #{userId}
+          AND STATUS = 'USED'
+    </select>
+
+    <!--  2025.11.28 수진 -->
+    <!-- 사용자의 사용 가능한 쿠폰 조회 (카테고리 필터링) -->
+    <select id="selectAvailableCouponsByCategory" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            uc.USERCOUPONID as userCouponId,
+            uc.USERID as userId,
+            uc.COUPONID as couponId,
+            uc.ISSUEDDATE as issuedDate,
+            uc.USEDDATE as usedDate,
+            uc.PRODUCTNO as productNo,
+            uc.STATUS as status,
+            c.COUPONCODE as couponCode,
+            c.COUPONNAME as couponName,
+            c.DESCRIPTION as description,
+            c.RATEINCREASE as rateIncrease,
+            c.MAXUSAGECOUNT as maxUsageCount,
+            c.CURRENTUSAGECOUNT as currentUsageCount,
+            c.VALIDFROM as validFrom,
+            c.VALIDTO as validTo,
+            c.ISACTIVE as isActive
+        FROM USERCOUPON uc
+                 INNER JOIN COUPON c ON uc.COUPONID = c.COUPONID
+                 INNER JOIN COUPONCATEGORY cc ON c.COUPONID = cc.COUPONID
+        WHERE uc.USERID = #{userId}
+          AND uc.STATUS = 'UNUSED'
+          AND c.ISACTIVE = 'Y'
+          AND c.STATUS = 'Y'
+          AND SYSDATE BETWEEN c.VALIDFROM AND c.VALIDTO
+          AND (c.MAXUSAGECOUNT = 0 OR c.CURRENTUSAGECOUNT <![CDATA[<]]> c.MAXUSAGECOUNT)
+          AND cc.CATEGORYID = #{categoryId}
+        ORDER BY c.RATEINCREASE DESC
+    </select>
+
+    <!-- 🔥 Flutter API용: 사용 가능한 쿠폰 조회 (2025-12-17 - 작성자: 진원) -->
+    <select id="selectAvailableCoupons" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            uc.USERCOUPONID as userCouponId,
+            uc.USERID as userId,
+            uc.COUPONID as couponId,
+            uc.ISSUEDDATE as issuedDate,
+            uc.USEDDATE as usedDate,
+            uc.PRODUCTNO as productNo,
+            uc.STATUS as status,
+            c.COUPONCODE as couponCode,
+            c.COUPONNAME as couponName,
+            c.DESCRIPTION as description,
+            c.RATEINCREASE as bonusRate,
+            c.VALIDFROM as validFrom,
+            c.VALIDTO as expireDate,
+            c.ISACTIVE as isActive
+        FROM USERCOUPON uc
+        INNER JOIN COUPON c ON uc.COUPONID = c.COUPONID
+        WHERE uc.USERID = #{userNo}
+          AND c.ISACTIVE = 'Y'
+          AND c.STATUS = 'Y'
+          AND (uc.STATUS = 'UNUSED' OR uc.STATUS = 'USED')
+          AND SYSDATE <![CDATA[<=]]> c.VALIDTO
+        ORDER BY uc.STATUS ASC, c.VALIDTO DESC
+    </select>
+
+    <!-- 🔥 Flutter API용: 사용자 번호로 쿠폰 조회 (2025-12-19 - 작성자: 진원) -->
+    <select id="findByUserNo" resultType="kr.co.busanbank.dto.UserCouponDTO">
+        SELECT
+            UC.USERCOUPONID as ucNo,
+            UC.USERID       as userNo,
+            UC.COUPONID     as couponNo,
+            C.COUPONNAME    as couponName,
+            C.RATEINCREASE  as bonusRate,
+            C.CATEGORYID    as categoryId,
+            UC.PRODUCTNO    as productNo,
+            TO_CHAR(UC.ISSUEDDATE, 'YYYY-MM-DD') as expireDate,
+            UC.STATUS       as status
+        FROM USERCOUPON UC
+        INNER JOIN COUPON C ON UC.COUPONID = C.COUPONID
+        WHERE UC.USERID = #{userNo}
+          AND UC.STATUS = 'UNUSED'
+    </select>
+
+</mapper>

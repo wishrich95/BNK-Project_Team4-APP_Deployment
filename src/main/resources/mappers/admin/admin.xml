@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    작성자: 진원
+    작성일: 2025-11-16
+    설명: 관리자 계정 관리 Mapper (CRUD)
+-->
+<mapper namespace="kr.co.busanbank.mapper.AdminMapper">
+
+    <!-- 관리자 목록 조회 (페이징) -->
+    <select id="selectAdminList" resultType="kr.co.busanbank.dto.AdminDTO">
+        SELECT * FROM (
+            SELECT
+                a.*,
+                ROW_NUMBER() OVER (ORDER BY createdAt DESC) as rnum
+            FROM ADMIN a
+            WHERE 1=1
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (
+                    adminName LIKE '%' || #{searchKeyword} || '%'
+                    OR loginId LIKE '%' || #{searchKeyword} || '%'
+                )
+            </if>
+        )
+        WHERE rnum BETWEEN #{offset} + 1 AND #{offset} + #{limit}
+    </select>
+
+    <!-- 관리자 전체 개수 -->
+    <select id="countAdmins" resultType="int">
+        SELECT COUNT(*) FROM ADMIN
+        WHERE 1=1
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (
+                adminName LIKE '%' || #{searchKeyword} || '%'
+                OR loginId LIKE '%' || #{searchKeyword} || '%'
+            )
+        </if>
+    </select>
+
+    <!-- 관리자 ID로 조회 -->
+    <select id="selectAdminById" parameterType="int" resultType="kr.co.busanbank.dto.AdminDTO">
+        SELECT * FROM ADMIN WHERE adminId = #{adminId}
+    </select>
+
+    <!-- 관리자 추가 -->
+    <insert id="insertAdmin" parameterType="kr.co.busanbank.dto.AdminDTO">
+        <selectKey keyProperty="adminId" order="BEFORE" resultType="int">
+            SELECT NVL(MAX(adminId), 0) + 1 FROM ADMIN
+        </selectKey>
+        INSERT INTO ADMIN (
+            adminId,
+            loginId,
+            password,
+            adminName,
+            adminRole,
+            createdAt,
+            updatedAt,
+            status
+        ) VALUES (
+            #{adminId},
+            #{loginId},
+            #{password},
+            #{adminName},
+            #{adminRole},
+            SYSDATE,
+            SYSDATE,
+            #{status}
+        )
+    </insert>
+
+    <!-- 관리자 수정 -->
+    <update id="updateAdmin" parameterType="kr.co.busanbank.dto.AdminDTO">
+        UPDATE ADMIN
+        SET
+            adminName = #{adminName},
+            adminRole = #{adminRole},
+            status = #{status},
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            updatedAt = SYSDATE
+        WHERE adminId = #{adminId}
+    </update>
+
+    <!-- 관리자 삭제 (soft delete) -->
+    <update id="deleteAdmin" parameterType="int">
+        UPDATE ADMIN
+        SET status = 'N',
+            updatedAt = SYSDATE
+        WHERE adminId = #{adminId}
+    </update>
+
+    <!-- 로그인 ID 중복 체크 -->
+    <select id="countByLoginId" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM ADMIN
+        WHERE loginId = #{loginId}
+    </select>
+
+    <!-- ========== 로그인 실패 제한 관련 쿼리 (작성자: 진원, 2025-11-20) ========== -->
+
+    <!-- LoginId로 관리자 조회 -->
+    <select id="selectAdminByLoginId" parameterType="string" resultType="kr.co.busanbank.dto.AdminDTO">
+        SELECT
+            adminId,
+            adminName,
+            loginId,
+            password,
+            adminRole,
+            TO_CHAR(createdAt, 'YYYY-MM-DD HH24:MI:SS') as createdAt,
+            TO_CHAR(updatedAt, 'YYYY-MM-DD HH24:MI:SS') as updatedAt,
+            status,
+            loginFailCount,
+            accountLocked,
+            TO_CHAR(lastFailedLogin, 'YYYY-MM-DD HH24:MI:SS') as lastFailedLogin,
+            TO_CHAR(lockedDate, 'YYYY-MM-DD HH24:MI:SS') as lockedDate
+        FROM ADMIN
+        WHERE loginId = #{loginId}
+    </select>
+
+    <!-- 로그인 실패 카운트 증가 -->
+    <update id="incrementLoginFailCount" parameterType="string">
+        UPDATE ADMIN
+        SET loginFailCount = NVL(loginFailCount, 0) + 1,
+            lastFailedLogin = SYSDATE
+        WHERE loginId = #{loginId}
+    </update>
+
+    <!-- 계정 잠금 -->
+    <update id="lockAccount" parameterType="string">
+        UPDATE ADMIN
+        SET accountLocked = 'Y',
+            lockedDate = SYSDATE
+        WHERE loginId = #{loginId}
+    </update>
+
+    <!-- 로그인 성공 시 실패 카운트 리셋 -->
+    <update id="resetLoginFailCount" parameterType="string">
+        UPDATE ADMIN
+        SET loginFailCount = 0,
+            lastFailedLogin = NULL
+        WHERE loginId = #{loginId}
+    </update>
+
+    <!-- 계정 잠금 해제 -->
+    <update id="unlockAccount" parameterType="string">
+        UPDATE ADMIN
+        SET accountLocked = 'N',
+            loginFailCount = 0,
+            lockedDate = NULL,
+            lastFailedLogin = NULL
+        WHERE loginId = #{loginId}
+    </update>
+
+</mapper>

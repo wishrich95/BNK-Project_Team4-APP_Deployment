@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>TK딸깍은행::가입 완료</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/cs/chat.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+
+    <script th:src="@{/js/cs/openChat.js}" defer></script>
+
+    <style>
+        :root {
+            --red-900: #6A1B9A;
+            --red-700: #d3c8ef;
+            --red-100: #F3E8FF;
+            --white: #ffffff;
+            --grey-900: #333333;
+            --grey-700: #666666;
+            --grey-500: #B9B9B9;
+            --grey-400: #B0B0B0;
+            --grey-300: #DEDEDE;
+            --grey-100: #F8F8F8;
+            --container: 1200px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Noto Sans KR', sans-serif; color: var(--grey-900); min-width: 1200px; }
+
+        .container { max-width: var(--container); margin: 0 auto; padding: 0 20px; }
+        a { color: inherit; text-decoration: none; }
+
+        /* 상단 유틸, GNB 영역 */
+
+        /* 콘텐츠 영역 */
+        .content-area {
+            min-height: 60vh;
+            padding: 50px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .complete-wrap { width: 800px; }
+
+        .title-step { color: var(--red-900); font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+        .title-main { font-size: 2rem; font-weight: 700; line-height: 1.4; margin-bottom: 40px; color: var(--grey-900); }
+
+        /* 광고 배너 캐러셀 */
+        .ad-banner-carousel {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .ad-banner-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ad-banner-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none;
+        }
+
+        .ad-banner-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ad-banner-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ad-banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(120, 90, 255, 0.35) 0%, rgba(80, 140, 255, 0.28) 100%);
+            display: flex;
+            align-items: center;
+            padding: 60px;
+        }
+
+        .ad-banner-text {
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .ad-banner-text h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .ad-banner-text p {
+            font-size: 1.2rem;
+            color: var(--white);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .ad-banner-btn {
+            display: inline-block;
+            padding: 12px 35px;
+            background-color: var(--white);
+            color: var(--red-900);
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .ad-banner-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* 이전/다음 버튼 */
+        .ad-banner-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--red-900);
+            transition: all 0.3s;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .ad-banner-nav:hover {
+            background-color: var(--white);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .ad-banner-prev {
+            left: 20px;
+        }
+
+        .ad-banner-next {
+            right: 20px;
+        }
+
+        /* 인디케이터 */
+        .ad-banner-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .indicator.active {
+            width: 30px;
+            border-radius: 6px;
+            background-color: var(--white);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--grey-900);
+        }
+
+        /* 상품 카드 */
+        .product-card {
+            background-color: var(--white);
+            border: 2px solid var(--grey-300);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .product-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--red-900);
+            margin-bottom: 20px;
+        }
+        .product-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .product-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .product-info-label {
+            font-size: 0.9rem;
+            color: var(--grey-700);
+        }
+        .product-info-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--grey-900);
+        }
+        .product-info-value.highlight {
+            color: var(--red-900);
+            font-size: 1.3rem;
+        }
+
+        /* 금리 박스 */
+        .rate-box {
+            background: linear-gradient(135deg, var(--red-900), var(--red-700));
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            color: var(--white);
+            margin-bottom: 30px;
+        }
+        .rate-box-title {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        .rate-box-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .rate-box-desc {
+            font-size: 0.95rem;
+            opacity: 0.85;
+        }
+
+        /* 우대금리 안내 */
+        .preferential-info {
+            background-color: var(--grey-100);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .preferential-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 15px;
+        }
+        .preferential-list {
+            list-style: none;
+        }
+        .preferential-list li {
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--grey-300);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+        .preferential-list li:last-child {
+            border-bottom: none;
+        }
+        .preferential-condition {
+            color: var(--grey-700);
+        }
+        .preferential-rate {
+            color: var(--red-900);
+            font-weight: 700;
+        }
+
+        /* 안내사항 */
+        .notice-box {
+            background-color: var(--grey-100);
+            border-left: 4px solid var(--red-900);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .notice-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 12px;
+        }
+        .notice-list {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--grey-700);
+            line-height: 1.8;
+        }
+        .notice-list li {
+            padding-left: 15px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+        .notice-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--red-900);
+            font-weight: 700;
+        }
+
+        /* 상품설명서 및 약관 */
+        .document-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .document-link {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid var(--grey-300);
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--grey-700);
+            transition: all 0.3s;
+            cursor: pointer;
+            background-color: var(--white);
+        }
+        .document-link:hover {
+            border-color: var(--grey-500);
+            background-color: var(--grey-100);
+        }
+        .document-link-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: var(--grey-500);
+            transition: all 0.3s;
+        }
+        .document-link-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .document-link.confirmed {
+            border-color: var(--red-900);
+            background-color: var(--red-100);
+            color: var(--red-900);
+        }
+        .document-link.confirmed:hover {
+            border-color: var(--red-700);
+            background-color: var(--red-100);
+        }
+        .document-link.confirmed .document-link-icon {
+            color: var(--red-900);
+        }
+
+        /* 최종 가입 버튼 */
+        .final-button-area {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .btn-complete {
+            width: 100%;
+            padding: 18px 0;
+            background-color: var(--grey-300);
+            color: var(--grey-700);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: not-allowed;
+            transition: all 0.3s;
+        }
+        .btn-complete.active {
+            background-color: var(--red-900);
+            color: var(--white);
+            cursor: pointer;
+        }
+        .btn-complete.active:hover {
+            background-color: var(--red-700);
+        }
+
+        /* 상담 버튼 */
+        .contact-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .contact-btn {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--white);
+            border: 1px solid var(--grey-300);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .contact-btn:hover {
+            border-color: var(--red-900);
+            background-color: var(--red-100);
+        }
+        .contact-btn i {
+            font-size: 2rem;
+            color: var(--red-900);
+        }
+
+        /* 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--grey-300);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--grey-900);
+        }
+        .close-btn {
+            font-size: 2rem;
+            color: var(--grey-500);
+            cursor: pointer;
+        }
+        .close-btn:hover {
+            color: var(--grey-900);
+        }
+        .modal-body {
+            padding: 30px;
+            line-height: 1.8;
+        }
+        .modal-body h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .modal-body p {
+            color: var(--grey-700);
+            margin-bottom: 15px;
+        }
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--grey-300);
+            text-align: center;
+        }
+        .btn-primary {
+            padding: 12px 40px;
+            background-color: var(--red-900);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background-color: var(--red-700);
+        }
+
+        /* 가입 완료 모달 */
+        .complete-modal-content {
+            width: 400px;
+            padding: 40px;
+            text-align: center;
+        }
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--grey-900);
+            margin-bottom: 20px;
+        }
+        .modal-text {
+            font-size: 1rem;
+            color: var(--grey-700);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .modal-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--red-900);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .modal-btn:hover {
+            background-color: var(--red-700);
+        }
+    </style>
+
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body>
+
+<div th:replace="~{_header :: headerFragment}"></div>
+<!-- 상단 영역 -->
+
+
+<!-- 메인 컨텐츠 -->
+<section class="container content-area">
+    <div class="complete-wrap">
+        <p class="title-step">STEP 4/4</p>
+        <h2 class="title-main">가입을 완료하기 전,<br>상품 정보를 다시 한 번 확인해주세요.</h2>
+
+        <!-- ✅ form 태그 시작 -->
+        <form th:action="@{/prod/productjoin/complete}" method="post" id="completeForm">
+
+            <!-- ✅ hidden inputs: 모든 데이터 전송 -->
+            <input type="hidden" name="productNo" th:value="${joinRequest.productNo}">
+            <input type="hidden" name="userId" th:value="${joinRequest.userId}">
+            <input type="hidden" name="principalAmount" th:value="${joinRequest.principalAmount}">
+            <input type="hidden" name="contractTerm" th:value="${joinRequest.contractTerm}">
+            <input type="hidden" name="startDate" th:value="${joinRequest.startDate}">
+            <input type="hidden" name="expectedEndDate" th:value="${joinRequest.expectedEndDate}">
+            <input type="hidden" name="applyRate" th:value="${joinRequest.applyRate}">
+            <input type="hidden" name="earlyTerminateRate" th:value="${joinRequest.earlyTerminateRate}">
+            <input type="hidden" name="branchId" th:value="${joinRequest.branchId}">
+            <input type="hidden" name="empId" th:value="${joinRequest.empId}">
+            <input type="hidden" name="notificationSms" th:value="${joinRequest.notificationSms}">
+            <input type="hidden" name="notificationEmail" th:value="${joinRequest.notificationEmail}">
+            <input type="hidden" name="notificationHp" th:value="${joinRequest.notificationHp}">
+            <input type="hidden" name="notificationEmailAddr" th:value="${joinRequest.notificationEmailAddr}">
+            <input type="hidden" name="accountPassword" th:value="${joinRequest.accountPassword}">
+            <input type="hidden" name="finalAgree" id="finalAgree" value="false">
+            <!-- 게임포인트 추가 -->
+            <input type="hidden" name="userPoints" th:value="${joinRequest.userPoints}">
+            <input type="hidden" name="pointBonusRate" th:value="${joinRequest.pointBonusRate}">
+
+
+            <!-- 광고 배너 (캐러셀) -->
+            <div class="ad-banner-carousel">
+                <div class="ad-banner-wrapper">
+                    <!-- 슬라이드 1 -->
+                    <div class="ad-banner-slide active">
+                        <img th:src="@{/images/product/deposit.jpg}" alt="예금 광고 1" class="ad-banner-bg">
+                        <div class="ad-banner-overlay">
+                            <div class="ad-banner-text">
+                                <h3>BNK 부산은행 특판 정기예금</h3>
+                                <p>지금 가입하면 최대 연 3.5% 우대금리 혜택!</p>
+                                <a href="#" class="ad-banner-btn">자세히 보기</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 슬라이드 2 -->
+                    <div class="ad-banner-slide">
+                        <img th:src="@{/images/product/nasdaq.png}" alt="예금 광고 2" class="ad-banner-bg">
+                        <div class="ad-banner-overlay">
+                            <div class="ad-banner-text">
+                                <h3>부산은행 My플러스 정기예금</h3>
+                                <p>신규 고객 특별 우대! 최대 연 3.2% 금리</p>
+                                <a href="#" class="ad-banner-btn">자세히 보기</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 슬라이드 3 -->
+                    <div class="ad-banner-slide">
+                        <img th:src="@{/images/product/crudeoil.jpg}" alt="예금 광고 3" class="ad-banner-bg">
+                        <div class="ad-banner-overlay">
+                            <div class="ad-banner-text">
+                                <h3>청년 우대 정기예금</h3>
+                                <p>만 34세 이하 고객 전용! 연 4.0% 특별 금리</p>
+                                <a href="#" class="ad-banner-btn">자세히 보기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 이전/다음 버튼 -->
+                <button type="button" class="ad-banner-nav ad-banner-prev" onclick="changeSlide(-1)">
+                    <i class="xi-angle-left"></i>
+                </button>
+                <button type="button" class="ad-banner-nav ad-banner-next" onclick="changeSlide(1)">
+                    <i class="xi-angle-right"></i>
+                </button>
+
+                <!-- 인디케이터 -->
+                <div class="ad-banner-indicators">
+                    <span class="indicator active" onclick="goToSlide(0)"></span>
+                    <span class="indicator" onclick="goToSlide(1)"></span>
+                    <span class="indicator" onclick="goToSlide(2)"></span>
+                </div>
+            </div>
+
+            <!-- 상품 안내 ✅ 포인트 정보 추가 -->
+            <h3 class="section-title">상품 안내</h3>
+            <div class="product-card">
+                <div class="product-name" th:text="${joinRequest.productName}">상품명</div>
+                <div class="product-info-grid">
+                    <div class="product-info-item">
+                        <span class="product-info-label">가입 금액</span>
+                        <span class="product-info-value" th:text="${#numbers.formatInteger(joinRequest.principalAmount, 0, 'COMMA')} + '원'">1,000,000원</span>
+                    </div>
+                    <div class="product-info-item">
+                        <span class="product-info-label">가입 기간</span>
+                        <span class="product-info-value" th:text="${joinRequest.contractTerm} + '개월'">12개월</span>
+                    </div>
+
+                    <!-- ✅ 선택한 포인트 정보 추가 -->
+                    <div class="product-info-item" style="background-color: #FFF9E6; padding: 10px; border-radius: 6px; border: 2px solid #FFB800;">
+                        <span class="product-info-label">사용한 포인트</span>
+                        <span class="product-info-value" style="color: #FFB800; font-weight: 700;" th:text="${joinRequest.usedPoints} + ' P'">1,200 P</span>
+                    </div>
+
+                    <div class="product-info-item">
+                        <span class="product-info-label">기본 이율</span>
+                        <span class="product-info-value" th:text="'연 ' + ${joinRequest.baseRate} + '%'">연 3.50%</span>
+                    </div>
+
+                    <!-- ✅ 포인트 금리 표시 -->
+                    <div class="product-info-item" style="background-color: #FFF9E6; padding: 10px; border-radius: 6px;">
+                        <span class="product-info-label">포인트 추가 금리</span>
+                        <span class="product-info-value highlight" style="color: #FFB800;" th:text="'+ ' + ${joinRequest.pointBonusRate} + '%'">+ 1.20%</span>
+                    </div>
+
+                    <!-- ✅ 최종 적용 금리 -->
+                    <div class="product-info-item" style="background-color: #FAE5E6; padding: 10px; border-radius: 6px;">
+                        <span class="product-info-label">최종 적용 이율</span>
+                        <span class="product-info-value highlight" th:text="'연 ' + ${joinRequest.applyRate} + '%'">연 4.70%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 최종 적용 금리 박스 수정 -->
+            <h3 class="section-title">최종 적용 금리</h3>
+            <div class="rate-box">
+                <div class="rate-box-title">고객님께 적용되는 최종 금리</div>
+                <div class="rate-box-value" th:text="'연 ' + ${joinRequest.applyRate} + '%'">연 4.70%</div>
+                <div class="rate-box-desc">
+                    기본금리 <span th:text="${joinRequest.baseRate} + '%'">3.50%</span> +
+                    포인트금리 <span th:text="${joinRequest.pointBonusRate} + '%'">1.20%</span>
+                    <span th:if="${joinRequest.couponBonusRate != null and joinRequest.couponBonusRate > 0}">
+                        + 쿠폰금리 <span th:text="${joinRequest.couponBonusRate} + '%'">5.0%</span>
+                    </span>
+                    <br>
+                    (사용 포인트 <span th:text="${joinRequest.usedPoints} + 'P'">1,200P</span> - 100점당 0.1% 우대
+                    <span th:if="${joinRequest.couponBonusRate != null and joinRequest.couponBonusRate > 0}">
+                        / 게임 쿠폰 <span th:text="${joinRequest.couponBonusRate} + '%'">5.0%</span> 적용
+                    </span>)
+                </div>
+            </div>
+
+            <!-- ✅ 포인트+쿠폰 안내 박스 수정 -->
+            <div class="notice-box" style="border-left: 4px solid #FFB800; background-color: #FFF9E6;">
+                <div class="notice-title">🎁 포인트 + 쿠폰 금리 우대 적용 내역</div>
+                <ul class="notice-list">
+                    <li>사용 포인트: <strong th:text="${joinRequest.usedPoints} + ' P'">100 P</strong></li>
+                    <li>포인트 금리 우대: <strong th:text="${joinRequest.pointBonusRate} + '%'">0.10%</strong> (100점당 0.1% 적용)</li>
+                    <li th:if="${joinRequest.couponBonusRate != null and joinRequest.couponBonusRate > 0}">
+                        게임 쿠폰 금리 우대: <strong style="color: #E1545A;" th:text="${joinRequest.couponBonusRate} + '%'">5.0%</strong>
+                    </li>
+                    <li>최종 적용 금리:
+                        기본금리 <span th:text="${joinRequest.baseRate} + '%'">3.50%</span> +
+                        포인트금리 <span th:text="${joinRequest.pointBonusRate} + '%'">0.10%</span>
+                        <span th:if="${joinRequest.couponBonusRate != null and joinRequest.couponBonusRate > 0}">
+                            + 쿠폰금리 <span th:text="${joinRequest.couponBonusRate} + '%'">5.0%</span>
+                        </span>
+                        = <strong style="color: #E1545A;" th:text="${joinRequest.applyRate} + '%'">8.60%</strong>
+                    </li>
+                    <li>✨ 포인트는 가입 완료 시 차감되며, 쿠폰은 사용 처리됩니다</li>
+                </ul>
+            </div>
+
+            <!-- hidden inputs 추가 -->
+            <input type="hidden" name="usedPoints" th:value="${joinRequest.usedPoints}">
+            <input type="hidden" name="selectedCouponId" th:value="${joinRequest.selectedCouponId}">
+            <input type="hidden" name="couponBonusRate" th:value="${joinRequest.couponBonusRate}">
+            <input type="hidden" name="pointBonusRate" th:value="${joinRequest.pointBonusRate}">
+
+            <!-- 중요 안내사항 -->
+            <h3 class="section-title">중요 안내사항</h3>
+            <div class="notice-box">
+                <div class="notice-title">⚠️ 꼭 확인해주세요</div>
+                <ul class="notice-list">
+                    <li>예금자보호법에 따라 예금보험공사가 보호하되, 본 은행에 있는 모든 예금보호 대상 금융상품의 원금과 소정의 이자를 합하여 1인당 "최고 5천만원"까지 보호합니다.</li>
+                    <li>만기 전 중도해지 시 중도해지이율이 적용되어 이자 수령액이 줄어들 수 있습니다.</li>
+                    <li>이자소득에 대해서는 소득세법에 따라 이자소득세(15.4%)가 원천징수됩니다.</li>
+                    <li>만기일이 영업일이 아닌 경우 전 영업일에 만기처리 됩니다.</li>
+                </ul>
+            </div>
+
+            <!-- 상품설명서 및 약관 -->
+            <!-- 작성자: 진원, 2025-11-29, PDF 보기 버튼 추가 -->
+            <h3 class="section-title">필수 확인 서류</h3>
+            <div class="document-links">
+                <div class="document-link" data-doc="productGuide" onclick="openModal('productGuideModal', 'productGuide')">
+                    <div class="document-link-icon">📄</div>
+                    <div class="document-link-text">상품설명서</div>
+                    <div style="margin-top: 8px;">
+                        <a th:href="@{/prod/productjoin/document/productGuide(productNo=${joinRequest.productNo})}"
+                           target="_blank"
+                           onclick="event.stopPropagation();"
+                           style="font-size: 0.85rem; color: var(--red-900); text-decoration: underline;">
+                            📥 PDF 보기
+                        </a>
+                    </div>
+                </div>
+                <div class="document-link" data-doc="terms" onclick="openModal('termsModal', 'terms')">
+                    <div class="document-link-icon">📋</div>
+                    <div class="document-link-text">약관</div>
+                    <div style="margin-top: 8px;">
+                        <a th:href="@{/prod/productjoin/document/terms(productNo=${joinRequest.productNo})}"
+                           target="_blank"
+                           onclick="event.stopPropagation();"
+                           style="font-size: 0.85rem; color: var(--red-900); text-decoration: underline;">
+                            📥 PDF 보기
+                        </a>
+                    </div>
+                </div>
+                <div class="document-link" data-doc="rateGuide" onclick="openModal('rateGuideModal', 'rateGuide')">
+                    <div class="document-link-icon">💰</div>
+                    <div class="document-link-text">금리 안내</div>
+                    <div style="margin-top: 8px;">
+                        <a th:href="@{/prod/productjoin/document/rateGuide(productNo=${joinRequest.productNo})}"
+                           target="_blank"
+                           onclick="event.stopPropagation();"
+                           style="font-size: 0.85rem; color: var(--red-900); text-decoration: underline;">
+                            📥 PDF 보기
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 상담 안내 -->
+            <h3 class="section-title">문의하기</h3>
+            <div class="contact-buttons">
+                <button type="button" class="contact-btn" onclick="alert('전화상담 연결: 1588-xxxx')">
+                    <i class="xi-phone"></i>
+                    <span>전화 상담<br><small style="font-size: 0.8rem; color: var(--grey-700);">1588-xxxx</small></span>
+                </button>
+                <!-- 11/30 채팅 웹소켓 연결 -->
+                <button type="button"
+                        class="contact-btn"
+                        id="productChatBtn"
+                        data-inquiry-type="상품 가입">
+                    <i class="xi-message"></i>
+                    <span>상담 하기<br><small style="font-size: 0.8rem; color: var(--grey-700);">평일 09:00 ~ 18:00</small></span>
+                </button>
+            </div>
+
+            <!-- 최종 가입하기 버튼 -->
+            <div class="final-button-area">
+                <button type="button" class="btn-complete" onclick="submitJoin()">
+                    가입하기
+                </button>
+            </div>
+        </form>
+        <!-- ✅ form 태그 끝 -->
+    </div>
+</section>
+
+<!-- 상품설명서 모달 -->
+<div id="productGuideModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>상품 설명서</h2>
+            <span class="close-btn" onclick="closeModal('productGuideModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 상품 개요</h4>
+            <p>고객님의 여유 자금을 안전하게 관리하면서 우대금리 혜택을 통해 더 높은 수익을 얻을 수 있는 정기예금 상품입니다.</p>
+
+            <h4>2. 가입 대상</h4>
+            <p>- 실명의 개인 및 개인사업자<br>
+                - 만 19세 이상 성인<br>
+                - 내·외국인 모두 가입 가능</p>
+
+            <h4>3. 가입 금액 및 기간</h4>
+            <p>- 최소 가입금액: 100,000원 이상<br>
+                - 가입 기간: 1개월 ~ 60개월</p>
+
+            <h4>4. 예금자 보호</h4>
+            <p>이 예금은 예금자보호법에 따라 예금보험공사가 보호하되, 본 은행의 모든 예금보호 대상 금융상품의 원금과 소정의 이자를 합하여 1인당 <strong>최고 5천만원</strong>까지 보호됩니다.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmDocument('productGuideModal', 'productGuide')">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- 약관 모달 -->
+<div id="termsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>예금거래 기본약관</h2>
+            <span class="close-btn" onclick="closeModal('termsModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>제1조 (약관의 적용)</h4>
+            <p>① 은행과 예금거래를 하는 고객은 이 약관에 따르기로 합니다.<br>
+                ② 이 약관에서 정하지 않은 사항은 관계법령에 따릅니다.</p>
+
+            <h4>제2조 (예금계약의 성립)</h4>
+            <p>예금계약은 예금자가 은행이 정한 예금신청서에 기명날인 또는 서명하고 일정한 금액을 입금함으로써 성립합니다.</p>
+
+            <h4>제3조 (이자)</h4>
+            <p>이자는 예금종류별 약정이율에 따라 계산합니다.</p>
+
+            <h4>제4조 (예금자보호)</h4>
+            <p>이 예금은 예금자보호법에 따라 보호됩니다. 다만, 보호 한도는 1인당 최고 5천만원이며, 초과하는 금액은 보호하지 않습니다.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmDocument('termsModal', 'terms')">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- 금리안내 모달 -->
+<div id="rateGuideModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>금리 안내</h2>
+            <span class="close-btn" onclick="closeModal('rateGuideModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4>1. 기본 금리</h4>
+            <p>가입 기간에 따라 기본 금리가 차등 적용됩니다.</p>
+
+            <h4>2. 중도 해지 이율</h4>
+            <p>만기 전 중도 해지 시 약정이율에서 일정 이율을 차감한 중도해지 이율이 적용됩니다.</p>
+
+            <h4>3. 만기 후 이율</h4>
+            <p>만기일 이후 해지하지 않고 보유하는 경우 만기후 이율(연 0.1%)이 적용됩니다.</p>
+
+            <h4>4. 금리 적용 기준</h4>
+            <p>- 금리는 신규 가입일 기준으로 확정됩니다.<br>
+                - 시장 금리 변동에 따라 금리가 변경될 수 있습니다.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" onclick="confirmDocument('rateGuideModal', 'rateGuide')">확인</button>
+        </div>
+    </div>
+</div>
+<div th:replace="~{cs/chatModal.html}"></div>
+
+<!-- Footer -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    window.BASE_URL = /*[[@{/}]]*/ "/busanbank/";
+
+    // 문서 확인 상태 관리
+    const documentChecks = {
+        productGuide: false,
+        terms: false,
+        rateGuide: false
+    };
+
+    // 모든 문서 확인 여부 체크
+    function checkAllDocuments() {
+        const allChecked = documentChecks.productGuide && documentChecks.terms && documentChecks.rateGuide;
+        const completeBtn = document.querySelector('.btn-complete');
+
+        if (allChecked) {
+            completeBtn.classList.add('active');
+        } else {
+            completeBtn.classList.remove('active');
+        }
+    }
+
+    // 모달 열기
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 모달 닫기
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // 문서 확인 완료
+    function confirmDocument(modalId, docType) {
+        // 확인 상태 업데이트
+        documentChecks[docType] = true;
+
+        // 해당 문서 링크에 confirmed 클래스 추가
+        const docLink = document.querySelector(`[data-doc="${docType}"]`);
+        if (docLink) {
+            docLink.classList.add('confirmed');
+        }
+
+        // 모달 닫기
+        closeModal(modalId);
+
+        // 모든 문서 확인 여부 체크
+        checkAllDocuments();
+    }
+
+    // 모달 배경 클릭 시 닫기
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+
+    // ✅ 가입 완료 처리
+    function submitJoin() {
+        // 모든 문서를 확인했는지 체크
+        if (!documentChecks.productGuide || !documentChecks.terms || !documentChecks.rateGuide) {
+            alert('상품설명서, 약관, 금리안내를 모두 확인해주세요.');
+            return;
+        }
+
+        // 최종 동의 확인
+        if (confirm('상품 가입을 완료하시겠습니까?')) {
+            console.log('✅ 가입 완료 처리 시작');
+
+            // finalAgree를 true로 설정
+            document.getElementById('finalAgree').value = 'true';
+
+            // form 제출
+            document.getElementById('completeForm').submit();
+        }
+    }
+
+    // 페이지 로드 시 초기화
+    window.addEventListener('load', function() {
+        console.log('✅ STEP 4 페이지 로드 완료');
+        checkAllDocuments();
+    });
+
+    // ✅ 광고 배너 캐러셀
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.ad-banner-slide');
+    const indicators = document.querySelectorAll('.indicator');
+
+    function showSlide(index) {
+        if (index >= slides.length) currentSlide = 0;
+        if (index < 0) currentSlide = slides.length - 1;
+
+        slides.forEach(slide => slide.classList.remove('active'));
+        indicators.forEach(ind => ind.classList.remove('active'));
+
+        slides[currentSlide].classList.add('active');
+        indicators[currentSlide].classList.add('active');
+    }
+
+    function changeSlide(direction) {
+        currentSlide += direction;
+        if (currentSlide >= slides.length) currentSlide = 0;
+        if (currentSlide < 0) currentSlide = slides.length - 1;
+        showSlide(currentSlide);
+    }
+
+    function goToSlide(index) {
+        currentSlide = index;
+        showSlide(currentSlide);
+    }
+
+    // 자동 슬라이드 (5초마다)
+    setInterval(() => {
+        changeSlide(1);
+    }, 5000);
+    /*]]>*/
+</script>
+</body>
+</html>

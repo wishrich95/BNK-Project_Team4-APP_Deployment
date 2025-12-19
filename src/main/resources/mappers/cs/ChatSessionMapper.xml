@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.busanbank.mapper.ChatSessionMapper">
+
+    <resultMap id="ChatSessionResultMap" type="kr.co.busanbank.dto.chat.ChatSessionDTO">
+        <id     column="sessionId"      property="sessionId"/>
+        <result column="userId"         property="userId"/>
+        <result column="consultantId"   property="consultantId"/>
+        <result column="inquiryType"    property="inquiryType"/>
+        <result column="status"         property="status"/>
+        <result column="priorityScore"  property="priorityScore"/>
+        <result column="createdAt"      property="createdAt"/>
+        <result column="updatedAt"      property="updatedAt"/>
+        <result column="waitStartTime"  property="waitStartTime"/>
+        <result column="chatStartTime"  property="chatStartTime"/>
+        <result column="chatEndTime"    property="chatEndTime"/>
+    </resultMap>
+
+
+    <insert id="insertChatSession" parameterType="kr.co.busanbank.dto.chat.ChatSessionDTO">
+        <selectKey keyProperty="sessionId" resultType="integer" order="BEFORE">
+            SELECT CHAT_SESSION_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO ChatSession (
+        sessionId,
+        userId,
+        inquiryType,
+        status,
+        priorityScore
+        ) VALUES (
+        #{sessionId},
+        #{userId, jdbcType=INTEGER},
+        #{inquiryType},
+        #{status},
+        #{priorityScore}
+        )
+    </insert>
+
+
+    <select id="selectChatSessionById" resultMap="ChatSessionResultMap">
+        SELECT
+            sessionId,
+            userId,
+            consultantId,
+            inquiryType,
+            status,
+            priorityScore,
+            createdAt,
+            updatedAt,
+            waitStartTime,
+            chatStartTime,
+            chatEndTime
+        FROM ChatSession
+        WHERE sessionId = #{sessionId}
+    </select>
+
+    <update id="updateChatSession" parameterType="kr.co.busanbank.dto.chat.ChatSessionDTO">
+        UPDATE ChatSession
+        SET userId        = #{userId},
+            consultantId  = #{consultantId},
+            inquiryType   = #{inquiryType},
+            status        = #{status},
+            priorityScore = #{priorityScore},
+            waitStartTime = #{waitStartTime},
+            chatStartTime = #{chatStartTime},
+            chatEndTime   = #{chatEndTime},
+            updatedAt     = #{updatedAt}
+        WHERE sessionId     = #{sessionId}
+    </update>
+
+    <update id="updateChatSessionStatus">
+        UPDATE ChatSession
+        SET status    = #{status},
+            updatedAt = #{updatedAt}
+        WHERE sessionId = #{sessionId}
+    </update>
+
+    <select id="selectByStatus" resultMap="ChatSessionResultMap">
+        SELECT
+            sessionId,
+            userId,
+            consultantId,
+            inquiryType,
+            status,
+            priorityScore,
+            createdAt,
+            updatedAt,
+            waitStartTime,
+            chatStartTime,
+            chatEndTime
+        FROM ChatSession
+        WHERE status = #{status}
+        ORDER BY createdAt ASC
+    </select>
+
+    <select id="selectByStatusAndConsultant" resultMap="ChatSessionResultMap">
+        SELECT
+            sessionId,
+            userId,
+            consultantId,
+            inquiryType,
+            status,
+            priorityScore,
+            createdAt,
+            updatedAt,
+            waitStartTime,
+            chatStartTime,
+            chatEndTime
+        FROM ChatSession
+        WHERE status = #{status}
+          AND consultantId = #{consultantId}
+        ORDER BY createdAt ASC
+    </select>
+
+    <update id="assignConsultantToSession">
+        UPDATE ChatSession
+        SET consultantId  = #{consultantId},
+            status        = #{status},
+            chatStartTime = SYSDATE,
+            updatedAt     = SYSDATE
+        WHERE sessionId     = #{sessionId}
+    </update>
+
+    <update id="closeChatSession">
+        UPDATE ChatSession
+        SET status      = #{status},
+            chatEndTime = SYSDATE,
+            updatedAt   = SYSDATE
+        WHERE sessionId   = #{sessionId}
+    </update>
+
+    <select id="selectChattingSessionsWithUnread"
+            resultType="kr.co.busanbank.dto.chat.ChatSessionDTO">
+        SELECT
+        cs.*,
+        (
+        SELECT COUNT(*)
+        FROM ChatMessage cm
+        WHERE cm.sessionId = cs.sessionId
+        AND cm.senderId != #{consultantId}
+        AND cm.isRead = 0
+        ) AS unreadCount
+        FROM ChatSession cs
+        WHERE cs.status       = 'CHATTING'
+        AND cs.consultantId = #{consultantId}
+        ORDER BY cs.chatStartTime DESC
+    </select>
+
+    <!-- ① 오래된 WAITING 세션들의 ID 목록 조회 (예: 10분 경과) -->
+    <select id="findOldWaitingSessionIds"
+            parameterType="int"
+            resultType="int">
+        SELECT sessionId
+        FROM ChatSession
+        WHERE status = 'WAITING'
+        AND createdAt &lt; SYSDATE - NUMTODSINTERVAL(#{minutes}, 'MINUTE')
+    </select>
+
+    <!-- ② 오래된 CHATTING 세션 CLOSED 처리(30분) -->
+    <update id="autoCloseOldChattingSessions" parameterType="int">
+        UPDATE ChatSession
+        SET status    = 'CLOSED',
+        updatedAt = SYSDATE
+        WHERE status    = 'CHATTING'
+        AND updatedAt &lt; SYSDATE - NUMTODSINTERVAL(#{minutes}, 'MINUTE')
+    </update>
+
+    <!-- ③ N일 지난 CLOSED / CANCELLED 세션 삭제 -->
+    <delete id="deleteOldClosedSessions" parameterType="int">
+        DELETE FROM ChatSession
+        WHERE status IN ('CLOSED', 'CANCELLED')
+        AND updatedAt &lt; SYSDATE - NUMTODSINTERVAL(#{days}, 'DAY')
+    </delete>
+
+</mapper>

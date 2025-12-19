@@ -1,0 +1,554 @@
+<!--
+    수정일 : 2025/11/28
+    수정자 : 천수빈
+    내용 : 딸깍은행 메인 UI*UX 변경
+-->
+<!doctype html>
+<html xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6" lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::Home</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+    <link rel="stylesheet" th:href="@{/css/member/Chatbot.css}">
+
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/scrollSnap.js}" defer></script>
+    <script th:src="@{/js/mainVideo.js}" defer></script>
+    <script th:src="@{/js/productCard.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+</head>
+
+<body class="main-page">
+
+    <div class="snap-container">
+        <section class="snap-section" id="sec1">
+
+            <header th:fragment="headerFragment"
+                    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+                    th:class="${#authorization.expr('isAuthenticated()')} ? 'header login-on' : 'header'">
+
+                <!-- Util 영역 (최상단) -->
+                <article class="util-wrapper">
+                    <div class="util-inner container">
+
+                        <!-- 오른쪽: Util 메뉴 -->
+                        <div class="util-menu">
+                            <!-- 로그인 정보 (로그인 시에만 표시) -->
+                            <div class="login-info" sec:authorize="isAuthenticated()">
+                                <a th:href="@{/my}" th:inline="text">[[${user.userName}]]님</a>
+                                <div class="session-box">
+                                    <p id="session-timer"></p>
+                                    <button type="button" class="extend-session">연장</button>
+                                </div>
+                            </div>
+
+                            <!-- 로그아웃 버튼 (로그인 시) -->
+                            <a sec:authorize="isAuthenticated()" th:href="@{/member/logout}">로그아웃</a>
+
+                            <!-- 비로그인 상태 로그인 버튼 -->
+                            <a sec:authorize="!isAuthenticated()" th:href="@{/member/login}">로그인</a>
+
+                            <a th:href="@{/cs}">고객센터</a>
+                            <a th:href="@{/company/companyintro}">은행소개</a>
+
+                            <!-- Global 버튼 -->
+                            <div class="global-wrap">
+                                <button class="global-btn">
+                                    Global <i class="xi-caret-down-min global-icon"></i>
+                                </button>
+
+                                <div class="global-dropdown">
+                                    <div class="global-inner">
+                                        <a data-lang="ko"><img th:src="@{/images/main/kr1x1.png}"> 한국어</a>
+                                        <a data-lang="en"><img th:src="@{/images/main/us1x1.png}"> English</a>
+                                        <a data-lang="jp"><img th:src="@{/images/main/jp1x1.png}"> 日本語</a>
+                                        <a data-lang="cn"><img th:src="@{/images/main/cn1x1.png}"> 中文</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 검색 아이콘 -->
+                            <i class="xi-search search-open-btn"></i>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- GNB 영역 -->
+                <article class="gnb-wrapper">
+                    <div class="gnb-inner container">
+                        <div class="logo-gnb-group">
+                            <!-- 로고 -->
+                            <a th:href="@{/}" class="header_logo">
+                                <img class="logo-img" th:src="@{/images/main/TKBank_logo.png}" alt="딸깍은행 로고">
+                            </a>
+
+                            <!-- GNB 메뉴 -->
+                            <nav class="gnb">
+                                <!-- 예금 -->
+                                <div class="menu-item" data-menu="예금">
+                                    <a href="#">예금</a>
+
+                                    <div class="submenu-wrap">
+                                        <div class="submenu-inner">
+                                            <!-- 예금상품 (CATEGORYID=1 하위) -->
+                                            <div class="submenu-block">
+                                                <h3 class="submenu-title">예금상품</h3>
+                                                <div class="submenu-grid">
+                                                    <!-- DB에서 가져온 카테고리 -->
+                                                    <th:block th:each="category : ${headerCategories.depositProducts}">
+                                                        <a th:href="@{/prod/list(categoryId=${category.categoryId})}"
+                                                           th:text="${category.categoryName}">카테고리명</a>
+                                                    </th:block>
+                                                </div>
+                                            </div>
+
+                                            <!-- 예금이용가이드 (CATEGORYID=12 하위) -->
+                                            <div class="submenu-block guide-block">
+                                                <h3 class="submenu-title">예금이용가이드</h3>
+                                                <div class="submenu-list">
+                                                    <th:block th:each="guide : ${headerCategories.depositGuides}">
+                                                        <a th:href="@{/guide(categoryId=${guide.categoryId})}"
+                                                           th:text="${guide.categoryName}">가이드명</a>
+                                                    </th:block>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 금융서비스 (CATEGORYID=15 하위) -->
+                                <div class="menu-item" data-menu="금융서비스">
+                                    <a href="#">금융서비스</a>
+
+                                    <div class="submenu-wrap">
+                                        <div class="submenu-inner">
+                                            <div class="submenu-block">
+                                                <h3 class="submenu-title">금융서비스</h3>
+                                                <div class="submenu-grid">
+                                                    <th:block th:each="service : ${headerCategories.financialServices}">
+                                                        <a th:href="@{/service(categoryId=${service.categoryId})}"
+                                                           th:text="${service.categoryName}">서비스명</a>
+                                                    </th:block>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 금융감정분석 -->
+                                <div class="menu-item">
+                                    <a th:href="@{/prod/list/future}">금융감정분석</a>
+                                </div>
+
+                                <!-- 금융게임 -->
+                                <div class="menu-item">
+                                    <a th:href="@{/quiz/quizdashboardcomplete}">금융게임</a>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 검색창 오버레이 -->
+                <div class="search-overlay">
+                    <div class="search-bg"></div>
+
+                    <div class="search-inner-bg">
+                        <div class="search-inner">
+                            <h2>키워드 검색</h2>
+                            <div class="search-box">
+                                <input type="text" placeholder="검색어를 입력하세요.">
+                                <button class="search-submit">
+                                    <i class="xi-search" id="openSearch"></i>
+                                </button>
+                            </div>
+
+                            <button class="search-close">
+                                <i class="xi-close"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <section class="hero">
+                <!-- 백그라운드 비디오 레이어 -->
+                <div class="hero-bg">
+                    <video id="video-main" class="hero-video active" data-type="main" autoplay muted loop playsInline>
+                        <source th:src="@{/video/main.mp4}" type="video/mp4">
+                    </video>
+                    <video id="video-btc" class="hero-video" data-type="bitcoin" autoplay muted loop playsinline>
+                        <source th:src="@{/video/bitcoin.mp4}" type="video/mp4">
+                    </video>
+                    <video id="video-gold" class="hero-video" data-type="gold" autoplay muted loop playsinline>
+                        <source th:src="@{/video/gold.mp4}" type="video/mp4">
+                    </video>
+                    <video id="video-oil" class="hero-video" data-type="oil" autoplay muted loop playsinline>
+                        <source th:src="@{/video/oil.mp4}" type="video/mp4">
+                    </video>
+
+                    <div class="hero-text-box">
+                        <h2 class="hero-title"></h2>
+                        <p class="hero-sub"></p>
+                    </div>
+
+                    <!-- 중앙 컨테이너 -->
+                    <div class="hero-inner">
+                        <div class="product-cards">
+                            <!-- 비트코인 예금 -->
+                            <a th:href="@{/prod/view?productNo=501}" class="product-card" data-video="btc">
+                                <!-- 호버 이미지 -->
+                                <div class="product-card__image">
+                                    <img th:src="@{/images/product/updown.png}" alt="BTC 비트코인 연동 예금">
+                                    <div class="product-card__btn">바로가기</div>
+                                </div>
+
+                                <!-- 기본 콘텐츠 -->
+                                <div class="product-card__content">
+                                    <header class="product-card__header">
+                                        <span class="product-card__tag">투자형 예금</span>
+                                        <h2 class="product-card__title">BTC 비트코인 연동 예금</h2>
+                                    </header>
+
+                                    <div class="product-card__meta">
+                                        <span class="badge">연</span>
+                                        <span class="badge">세전이율</span>
+                                        <span class="badge">변동금리</span>
+                                    </div>
+
+                                    <!-- 기본 금리 영역 -->
+                                    <div class="product-card__rate">
+                                        <span class="rate-main">2.50~3.00<span class="rate-unit">%</span></span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <!-- 금 예금 -->
+                            <a th:href="@{/prod/view?productNo=502}" class="product-card" data-video="gold">
+                                <!-- 호버 이미지 -->
+                                <div class="product-card__image">
+                                    <img th:src="@{/images/product/goldggang.png}" alt="GOLD 금 시세 연동 예금">
+                                    <div class="product-card__btn">바로가기</div>
+                                </div>
+
+                                <!-- 기본 콘텐츠 -->
+                                <div class="product-card__content">
+                                    <header class="product-card__header">
+                                        <span class="product-card__tag">투자형 예금</span>
+                                        <h2 class="product-card__title">GOLD 금 시세 연동 예금</h2>
+                                    </header>
+
+                                    <div class="product-card__meta">
+                                        <span class="badge">연</span>
+                                        <span class="badge">세전이율</span>
+                                        <span class="badge">변동금리</span>
+                                    </div>
+
+                                    <!-- 기본 금리 영역 -->
+                                    <div class="product-card__rate">
+                                        <span class="rate-main">2.80~3.30<span class="rate-unit">%</span></span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <!-- 오일 예금 -->
+                            <a th:href="@{/prod/view?productNo=503}" class="product-card" data-video="oil">
+                                <!-- 호버 이미지 -->
+                                <div class="product-card__image">
+                                    <img th:src="@{/images/product/oilpang.png}" alt="OIL 크루드오일 연동 예금">
+                                    <div class="product-card__btn">바로가기</div>
+                                </div>
+
+                                <!-- 기본 콘텐츠 -->
+                                <div class="product-card__content">
+                                    <header class="product-card__header">
+                                        <span class="product-card__tag">투자형 예금</span>
+                                        <h2 class="product-card__title">OIL 크루드오일 연동 예금</h2>
+                                    </header>
+
+                                    <div class="product-card__meta">
+                                        <span class="badge">연</span>
+                                        <span class="badge">세전이율</span>
+                                        <span class="badge">변동금리</span>
+                                    </div>
+
+                                    <!-- 기본 금리 영역 -->
+                                    <div class="product-card__rate">
+                                        <span class="rate-main">2.30~2.80<span class="rate-unit">%</span></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="snap-section" id="sec2">
+
+            <div class="deposit-section container">
+                <div class="deposit-inner">
+
+                    <p class="d-title">
+                        <span>고객을 향한 단 하나의 진심<br>
+                        <span class="big">One True Heart</span><br>
+                        딸깍은행에서 준비한 마음을 확인해 주세요</span>
+                    </p>
+
+                    <div class="deposit-slider">
+
+                        <!-- 첫 번째 카드: 초기 활성화 -->
+                        <div class="deposit-card active expand-right"
+                             th:data-link="@{'/prod/view?productNo=' + ${products[0].productNo}}">
+
+                            <!-- ★ 슬림뷰 추가 ★ -->
+                            <div class="deposit-slim">
+                                <span class="deposit-category" th:text="${products[0].categoryName}">목돈만들기</span>
+                                <span class="deposit-product-name" th:text="${products[0].productName}">저탄소 실천 예금</span>
+                            </div>
+
+                            <!-- 와이드뷰 -->
+                            <div class="deposit-wide active-wide">
+                                <div class="deposit-wide-header">
+                                    <div class="deposit-logo">
+                                        <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
+                                    </div>
+
+                                    <div class="join-type-wide" th:if="${products[0].joinTypes != null and !products[0].joinTypes.isEmpty()}">
+                                        <th:block th:each="type : ${products[0].joinTypes}">
+                                            <span class="join-badge" th:if="${type == 'BRANCH'}">영업점</span>
+                                            <span class="join-badge" th:if="${type == 'INTERNET'}">인터넷</span>
+                                            <span class="join-badge" th:if="${type == 'MOBILE'}">모바일</span>
+                                        </th:block>
+                                    </div>
+                                </div>
+
+                                <h3 th:text="${products[0].productName}">저탄소 실천 예금</h3>
+                                <p th:utext="${products[0].description}">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
+
+                                <span class="deposit-arrow"><i class="xi-angle-right"></i></span>
+                            </div>
+                        </div>
+
+                        <!-- 나머지 5개 카드 -->
+                        <div class="deposit-card expand-left"
+                             th:each="p, i : ${products}"
+                             th:if="${i.index > 0 and i.index <= 5}"
+                             th:data-link="@{'/prod/view?productNo=' + ${p.productNo}}">
+
+                            <!-- 슬림뷰: 세로 글자 -->
+                            <div class="deposit-slim">
+                                <span class="deposit-category" th:text="${p.categoryName}">목돈만들기</span>
+                                <span class="deposit-product-name" th:text="${p.productName}">저탄소 실천 예금</span>
+                            </div>
+
+                            <!-- 와이드뷰: 확장 시 표시 -->
+                            <div class="deposit-wide">
+                                <div class="deposit-wide-header">
+                                    <div class="deposit-logo">
+                                        <img th:src="@{/images/main/TKBank_logo-W.png}" alt="딸깍은행 로고">
+                                    </div>
+
+                                    <div class="join-type-wide" th:if="${products[0].joinTypes != null and !products[0].joinTypes.isEmpty()}">
+                                        <th:block th:each="type : ${products[0].joinTypes}">
+                                            <span class="join-badge" th:if="${type == 'BRANCH'}">영업점</span>
+                                            <span class="join-badge" th:if="${type == 'INTERNET'}">인터넷</span>
+                                            <span class="join-badge" th:if="${type == 'MOBILE'}">모바일</span>
+                                        </th:block>
+                                    </div>
+                                </div>
+
+                                <h3 th:text="${p.productName}">저탄소 실천 예금</h3>
+                                <p th:utext="${p.description}">생활 속에서 탄소 배출 감축에 참여하는 고객 실천형 환경 상품</p>
+
+                                <span class="deposit-arrow"><i class="xi-angle-right"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="deposit-more-wrap">
+                        <a th:href="@{/prod/list/main}" class="deposit-more-btn">
+                            <span>더보기</span>
+                            <i class="xi-angle-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="snap-section" id="sec3">
+            <!-- section 2 & 3 -->
+            <div class="ai-section">
+                <div class="inner">
+
+                    <div class="ai-box blue">
+                        <div class="ai-text">
+                            <div class="ai-copy-wrap">
+                                <p class="ai-title">
+                                    <span class="red">딸깍은행</span>의
+                                    <span class="ai-title-big">
+                                        스마트한 <span class="blue">AI 추천 예금</span>을<br>
+                                        만나 보세요.
+                                    </span>
+                                </p>
+                                <p class="ai-copy">
+                                    나에게 꼭 맞는 예금,<br>
+                                    AI가 스마트하게 제안합니다.<br>
+                                    분석은 보다 똑똑하게,<br>
+                                    선택은 보다 간편하게.
+                                </p>
+                            </div>
+                            <a th:href="@{/prod/list/main}" class="ai-link-b">AI 추천 예금 바로가기 <i class="xi-arrow-right"></i></a>
+                        </div>
+                        <div class="ai-img">
+                            <img th:src="@{/images/main/Data-extraction-pana.png}" class="img1" alt="AI 추천 예금">
+                        </div>
+                    </div>
+
+                    <div class="ai-box green">
+                        <div class="ai-text">
+                            <div class="ai-copy-wrap">
+                                <p class="ai-title">
+                                    <span class="red">딸깍은행</span>의
+                                    <span class="ai-title-big">
+                                        든든한 <span class="green">금융 감정 분석</span>을<br>
+                                        경험해 보세요.
+                                    </span>
+                                </p>
+                                <p class="ai-copy">
+                                    데이터를 넘어, 마음을 읽는 금융.<br>
+                                    딸깍은행의 AI 금융 감정 분석으로<br>
+                                    시장의 심리를 한눈에 파악하세요.
+                                </p>
+                            </div>
+                            <a th:href="@{/prod/list/future}" class="ai-link-g">금융 감정 분석 서비스 바로가기 <i class="xi-arrow-right"></i></a>
+                        </div>
+                        <div class="ai-img">
+                            <img th:src="@{/images/main/Financial-data-amico.png}" class="img2" alt="금융 감정 분석">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="footer-info">
+                <div class="container footer-info-row">
+
+                    <!-- 왼쪽: 링크 리스트 -->
+                    <div class="footer-link">
+                        <div>
+                            <a th:href="@{/cs/productCenter/manual}">• 상품공시실 <i class="xi-arrow-right"></i></a>
+                            <a th:href="@{/cs/fcqAct/protectionSystem}">• 금융소비자보호 <i class="xi-arrow-right"></i></a>
+                            <a href="https://portal.kfb.or.kr/main/main.php#pos01">• 비교조회서비스 <i class="xi-arrow-right"></i></a>
+                        </div>
+
+                        <div>
+                            <a th:href="@{/cs/archives/library}">• 서식/약관/자료실 <i class="xi-arrow-right"></i></a>
+                            <a th:href="@{/cs}">• 고객센터 <i class="xi-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- 가운데: 고객상담 번호 -->
+                    <div class="footer-center">
+                        <p class="label">고객상담 <span class="label-s">평일 09:00~18:00 (은행 휴무일 제외)</span></p>
+                        <p class="tel">1588-6200, 1544-6200</p>
+                        <p class="sub">
+                            해외<br>
+                            +82-2-1588-6200
+                        </p>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- 오른쪽: 버튼 -->
+                    <div class="footer-button">
+                        <a th:href="@{/cs}" class="btn">고객센터</a>
+                        <a th:href="@{/cs/customerSupport/onlineCounsel}" class="btn">고객상담</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer 부분 -->
+            <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+        </section>
+    </div>
+
+    <!-- 스크롤 스냅 설정 -->
+    <div class="side-nav">
+        <button class="nav-dot active" data-target="sec1"></button>
+        <button class="nav-dot" data-target="sec2"></button>
+        <button class="nav-dot" data-target="sec3"></button>
+    </div>
+
+    <!-- 퀵메뉴 사이드바 -->
+    <div class="quick-menu">
+        <!-- 금리계산기 (모달 - 추후 구현) -->
+        <button class="quick-menu-btn" data-tooltip="금리계산기" onclick="alert('금리계산기 모달은 추후 구현 예정입니다.')">
+            <i class="xi-calculator"></i>
+        </button>
+
+        <!-- 금융감정분석 -->
+        <a th:href="@{/prod/list/future}" class="quick-menu-btn" data-tooltip="금융감정분석">
+            <i class="xi-chart-line"></i>
+        </a>
+
+        <!-- 금융퀴즈 -->
+        <a th:href="@{/quiz/quizdashboardcomplete}" class="quick-menu-btn" data-tooltip="금융퀴즈">
+            <i class="xi-lightbulb-o"></i>
+        </a>
+
+        <!-- AI챗봇 (모달) -->
+        <button class="quick-menu-btn" data-tooltip="AI챗봇" onclick="openModal()">
+            <i class="xi-message-o"></i>
+        </button>
+    </div>
+
+    <!-- 챗봇 모달 -->
+    <div id="chatModal" class="modal-overlay">
+        <div class="modal-container">
+            <!-- 닫기 버튼 -->
+            <div class="modal-head">
+                <h2 class="modal-title">ChatBot</h2>
+                <button onclick="closeModal()" class="modal-close">×</button>
+            </div>
+
+            <!-- 대화 영역 -->
+            <div id="chat-box" class="chat-content">
+                <div class="bot-msg-container">
+                    <img th:src="@{/images/member/chatIcon.png}">
+                    <div class="bot-msg">
+                        무엇을 도와드릴까요?
+                        <!-- 키워드 버튼 -->
+                        <div class="keyword-area">
+                            <button class="keyword-btn" data-text="예금 상품 뭐가 있는지 상품명 알려줘">예금</button>
+                            <button class="keyword-btn" data-text="카드 신청에 대한 정보 알려줘">카드</button>
+                            <button class="keyword-btn" data-text="펀드에 대한 정보 알려줘">펀드</button>
+                            <button class="keyword-btn" data-text="외환 개설에 대한 정보 알려줘">외환</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 입력 영역 -->
+            <form id="chat-form" class="chat-input-area">
+                <input type="text" id="chat-input" class="chat-input" placeholder="질문 입력..." required>
+                <button type="submit" class="chat-send-btn">보내기</button>
+            </form>
+        </div>
+    </div>
+
+    <script th:src="@{/js/member/openModal.js}" defer></script>
+    <script th:src="@{/js/member/chatbot.js}" defer></script>
+</body>
+</html>

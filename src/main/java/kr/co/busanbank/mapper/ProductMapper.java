@@ -1,0 +1,100 @@
+package kr.co.busanbank.mapper;
+
+import kr.co.busanbank.dto.ProductDTO;
+import kr.co.busanbank.dto.UserProductDTO;
+import kr.co.busanbank.dto.ProductDetailDTO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * 작성자: 진원
+ * 작성일: 2025-11-16
+ * 설명: 금융상품 관리 Mapper 인터페이스
+ */
+@Mapper
+public interface ProductMapper {
+
+    // 상품 목록 조회 (페이징)
+    List<ProductDTO> selectProductList(
+            @Param("offset") int offset,
+            @Param("limit") int limit,
+            @Param("searchKeyword") String searchKeyword,
+            @Param("productType") String productType
+    );
+
+    // 상품 전체 개수
+    int countProducts(
+            @Param("searchKeyword") String searchKeyword,
+            @Param("productType") String productType
+    );
+
+    // 상품 ID로 조회
+    ProductDTO selectProductById(@Param("productNo") int productNo);
+
+    // 상품 추가
+    int insertProduct(ProductDTO productDTO);
+
+    // 상품 수정
+    int updateProduct(ProductDTO productDTO);
+
+    // 상품 삭제 (soft delete)
+    int deleteProduct(@Param("productNo") int productNo);
+
+    // 상품명 중복 체크
+    int countByProductName(@Param("productName") String productName);
+
+    // 키워드 검색
+    List<ProductDTO> searchProducts(@Param("keyword") String keyword);
+
+    // ★★★ 카테고리별 상품 조회 추가 ★★★
+    List<ProductDTO> selectProductsByCategory(@Param("categoryId") int categoryId);
+
+    ProductDTO selectProductWithJoinTypes(@Param("productNo") int productNo);
+
+    // 상품별 가입 유저 목록 조회
+    List<UserProductDTO> selectUsersByProductNo(@Param("productNo") int productNo);
+  
+    /**
+     * 상품 상세 정보 조회
+     */
+    ProductDetailDTO getProductDetail(@Param("productNo") int productNo);
+
+    /* 페이지네이션 - 검색 결과 */
+    List<ProductDTO> searchProductsPaged(@Param("keyword") String keyword,
+                                         @Param("offset") int offset,
+                                         @Param("size") int size);
+
+    int countSearchResults(@Param("keyword") String keyword);
+
+    List<ProductDTO> getProductsByIds(List<Integer> ids);
+
+    /**
+     * 전체 상품 목록 조회 (관리자용)
+     */
+    List<ProductDTO> selectAllProducts();
+
+    /**
+     * AI 추천분석용
+     */
+    List<ProductDTO> findTopByOrderByMaturityRateDesc(@Param("limit") int limit);
+
+    List<ProductDTO> findTopSavingsByRate(@Param("limit") int limit);
+
+    List<ProductDTO> findAllForRecommendation();
+
+    List<ProductDetailDTO> findAllProductDetails();
+
+    /* 예금상품 가입순 정렬 25.11.26_수빈 */
+    List<ProductDTO> selectTopProductsBySubscribers(@Param("limit") int limit);
+
+
+    /**
+     * 상품 조회수 증가 (작성자: 진원, 작성일: 2025-12-01)
+     */
+    int increaseProductHit(@Param("productNo") int productNo);
+
+    BigDecimal selectContractEarlyRate(Long productNo);
+}

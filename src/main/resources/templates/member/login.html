@@ -1,0 +1,53 @@
+<!--날짜 : 2025/11/24
+이름 : 오서정
+내용 : 회원 html 수정 작성
+-->
+
+<div th:replace="~{member/_head.html}"></div>
+<script th:src="@{/js/member/msgBox.js}" defer></script>
+    <main>
+        <div th:if="${msg}" th:data-msg="${msg}" id="msgBox"></div>
+        <div class="board">
+
+            <div class="login-item">
+                <img th:src="@{/images/member/Family-Font.png}">
+
+                    <div class="login-box">
+                        <h2>로그인</h2>
+                        <form th:action="@{/member/login}" method="post">
+                            <p>홈페이지 회원</p>
+                            <div class="login-input">
+                                <i class="xi-user"></i>
+                                <input type="text" name="userId" placeholder="아이디 입력">
+                            </div>
+
+                            <div class="login-input">
+                                <i class="xi-key"></i>
+                                <input type="password" name="userPw" placeholder="비밀번호 입력">
+                            </div>
+                            <button type="submit" class="normal-button">로그인</button>
+                            <div class="login-link">
+                                <a th:href="@{/member/find/id}">아이디 찾기</a>
+                                <a th:href="@{/member/find/pw}">비밀번호 찾기</a>
+                                <a th:href="@{/member/signup}">회원가입</a>
+                            </div>
+                        </form>
+
+
+
+                        
+                    </div>
+
+
+            </div>
+
+
+
+
+        </div>
+
+    </main>
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>

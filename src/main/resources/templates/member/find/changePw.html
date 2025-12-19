@@ -1,0 +1,63 @@
+<div th:replace="~{member/_head.html}"></div>
+<script th:src="@{/js/member/validation.js}" defer></script>
+    <main>
+        <div class="board">
+            <div class="board-upper">
+                <h2>비밀번호 찾기</h2>
+            </div>
+            <div class="board-lower">
+                <div class="register-step">
+                    <p class="no-step">1</p>
+                     <div class="now-step">
+                        <p><span>2 </span>비밀번호 재설정</p>
+                    </div>
+                    <p class="no-step">3</p>
+                </div>
+
+
+                <div class="search-area">
+                    <div class="info-ment">
+                        <h2>유의사항</h2>
+                        <p>비밀번호는 영문, 숫자, 특수문자 8~12자로 설정 해주세요.</p>
+                     </div>
+
+                    <div class="enter-info">
+                        <form th:action="@{/member/find/pw/change}" method="post">
+                            <input type="hidden" name="userId" th:value="${findIdInfo.userId}">
+                        <table class="find-table" id="changePwTable">                        
+                            <tr>
+                                <th>새 비밀번호</th>
+                                <td>
+                                    <input type="password" name="userPw" placeholder="새 비밀번호 입력"/>
+                                    <span class="passResult"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>새 비밀번호 확인</th>
+                        
+                                <td><input type="password" name="userPw2" placeholder="새 비밀번호 입력 확인"/></td>
+                            </tr>
+
+                        
+                        </table>
+
+                    
+                    </div>
+
+                </div>
+            
+                <div class="find-btn-wrap">
+                    <button type="submit" class="agree-btn">확인</button>
+                </div>
+                </form>
+
+            </div>
+
+
+        </div>
+    </main>
+
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>

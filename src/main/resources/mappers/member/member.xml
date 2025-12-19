@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.busanbank.mapper.MemberMapper">
+
+    <insert id="insertUser" parameterType="kr.co.busanbank.dto.UsersDTO">
+        INSERT INTO USERS(
+        userno, username, userid, userpw, email, hp, zip, addr1, addr2, regdate, createdat,
+        updatedat, accountpassword, rrn
+        ) VALUES (
+        #{userNo},
+        #{userName},
+        #{userId},
+        #{userPw},
+        #{email,jdbcType=VARCHAR},
+        #{hp, jdbcType=VARCHAR},
+        #{zip,jdbcType=VARCHAR},
+        #{addr1,jdbcType=VARCHAR},
+        #{addr2,jdbcType=VARCHAR},
+        SYSDATE,
+        SYSDATE,
+        SYSDATE,
+        #{accountPassword,jdbcType=VARCHAR},
+        #{rrn,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="updatePw">
+        UPDATE users
+        SET userPw = #{encodedPass}
+        WHERE userId = #{userId}
+    </update>
+
+    <select id="findByUserId" parameterType="string" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT * FROM USERS WHERE userId = #{userId}
+    </select>
+
+    <!-- 2025/12/18 - userNo로 사용자 정보 조회 - 작성자: 진원 -->
+    <select id="findByUserNo" parameterType="long" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT * FROM USERS WHERE userNo = #{userNo}
+    </select>
+
+    <!-- 2025/11/30 - 회원 상태 처리(A:활성 경우만 아이디/비밀번호 찾기 가능 - 오서정 -->
+    <select id="findUserIdInfoEmail" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userId, userName, email FROM USERS WHERE userName = #{userName} AND email = #{email} and status = 'A'
+    </select>
+
+    <select id="findUserIdInfoHp" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userId, userName, hp FROM USERS WHERE userName = #{userName} AND hp = #{hp} and status = 'A'
+    </select>
+
+    <select id="findUserPwInfoEmail" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userId, userName, email FROM USERS WHERE userName = #{userName} AND email = #{email} AND userId= #{userId} and status = 'A'
+    </select>
+
+    <select id="findUserPwInfoHp" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userId, name, hp FROM USERS WHERE userName = #{userName} AND hp = #{hp} AND userId= #{userId} and status = 'A'
+    </select>
+
+
+    <select id="countByUserId" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM USERS WHERE userId = #{userId}
+    </select>
+
+    <select id="countByEmail" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM USERS WHERE email = #{email}
+    </select>
+
+    <select id="countByHp" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM USERS WHERE hp = #{hp}
+    </select>
+
+
+    <select id="getTermsAll" resultType="kr.co.busanbank.dto.TermDTO">
+        select termno, termtype, termtitle, termcontent
+        from term
+    </select>
+
+    <!-- /////////////////////////////////////////////////////////////// -->
+    <!-- 계좌암호화 비교를 위한 쿼리 - ★★★ 2025/12/11 수진 ★★★ -->
+    <select id="findAccountPasswordByUserId" resultType="String">
+        SELECT accountPassword
+        FROM USERS
+        WHERE userId = #{userId}
+    </select>
+
+    <!-- 🔥 userId로 userNo 조회하는 쿼리 - ★★★ 2025/12/11 수진 ★★★ -->
+    <select id="findUserNoByUserId" resultType="long">
+        SELECT userNo
+        FROM USERS
+        WHERE userId = #{userId}
+    </select>
+
+    <!-- ★ 계좌비번 쿼리  -->
+    <select id="findAccountPasswordByUserNo" resultType="String">
+        SELECT accountPassword
+        FROM USERS
+        WHERE userNo = #{userNo}
+    </select>
+    <!-- /////////////////////////////////////////////////////////////// -->
+
+    <!-- 2025/12/05 - 인증 관련 로직 수정 - 작성자: 오서정-->
+    <select id="selectAllEmails" resultType="string">
+        SELECT email FROM USERS WHERE email IS NOT NULL
+    </select>
+
+    <select id="selectAllHps" resultType="string">
+        SELECT hp FROM USERS WHERE hp IS NOT NULL
+    </select>
+
+    <select id="selectAllUserNames" resultType="string">
+        SELECT userName FROM USERS WHERE userName IS NOT NULL
+    </select>
+
+    <select id="selectAllForIdFind" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userId, userName, hp, email, status
+        FROM USERS
+        WHERE status = 'A'
+    </select>
+
+    <select id="selectAllForPwFind" resultType="kr.co.busanbank.dto.UsersDTO">
+        SELECT userId, userName, email, hp, status
+        FROM USERS
+        WHERE status = 'A'
+    </select>
+
+</mapper>

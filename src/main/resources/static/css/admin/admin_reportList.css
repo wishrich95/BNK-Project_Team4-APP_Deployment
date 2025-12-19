@@ -1,0 +1,240 @@
+* {  /* 공통 세팅 */
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.main-right { /* 오른쪽 레이아웃 */
+    background: #FFE9EA 0% 0% no-repeat padding-box;
+    height: 1080px;
+    opacity: 1;
+    width: 1560px;
+}
+
+.faq_title {
+    margin-left: 53px;
+    margin-top: 86px;
+}
+.title_sp {
+    color:#D03238;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 700;
+    font-size: 28px;
+    font-family: Pretendard;
+    line-height: 29px;
+}
+
+.search-select {
+    appearance: none;
+    border-left: 1px solid #BFBFBF;
+    border-top: 1px solid #BFBFBF;
+    border-bottom: 1px solid #BFBFBF;
+    border-right: 1px solid #BFBFBF;
+    height: 35px;
+    outline: none;
+    padding-left: 10px;
+    width: 95px;
+    border-radius: 5px 0 0 5px;
+}
+.search_form {
+    display: flex;
+    gap: 0;
+    margin-left: 53px;
+    margin-top: 20px;
+}
+.search_sp {color: #666666;}
+.search-input {
+    border-top: 1px solid #BFBFBF;
+    border-right: 1px solid #BFBFBF;
+    border-bottom: 1px solid #BFBFBF;
+    border-left: none;
+    height: 35px;
+    outline: none;
+    padding-left: 10px;
+    width: 270px;
+    border-radius: 0 5px 5px 0;
+}
+.search-btn {
+    background-color: #666666;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-family: Pretendard;
+    height: 35px;
+    width: 60px;
+    margin-left: 10px;
+}
+.search-btn:hover {background-color: #4d4d4d;}
+
+table {
+    border-collapse: collapse;
+    box-shadow: 0px 4px 10px #00000029;
+    margin-left: 53px;
+    margin-top: 40px;
+    width: 1460px;
+}
+th {
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 600;
+    font-size: 18px;
+    font-family: Pretendard;
+    height: 60px;
+    line-height: 24px;
+}
+
+.all_select {
+    height: 18px;
+    margin: 10px;
+    width: 18px;
+}
+
+.content_tr {
+    background-color: white;
+    border-bottom: 1px solid #B9B9B9;
+    text-align: center;
+}
+td {
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-size: 16px;
+    font-family: Pretendard;
+    height: 60px;
+    line-height: 18px;
+}
+.row-checkbox {
+    height: 18px;
+    width: 18px;
+}
+.td_a {
+    color: black;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-size: 16px;
+    font-family: Pretendard;
+    line-height: 18px;
+    text-decoration: none;
+}
+
+.status1 {
+    color:#00B050;
+}
+.status2 {
+    color:red;
+}
+
+.delete_btn {
+    background: linear-gradient(135deg, #E1545A 0%, #D03238 100%);
+    border-radius: 5px;
+    color:white;
+    font-weight: 600;
+    padding: 12px 28px;
+    text-decoration:none;
+}
+
+.update_btn {
+    background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
+    border-radius: 5px;
+    color:white;
+    font-weight: 600;
+    padding: 12px 28px;
+    text-decoration:none;
+}
+
+.btn_box {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 53px;
+    margin-top: 20px;
+    width: 1460px;
+}
+.select_delete {
+    background-color: #D03238;border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-size: 16px;
+    font-family: Pretendard;
+    line-height: 18px;
+    padding: 12px 24px;
+}
+.select_delete:hover {background-color: #a82429;}
+
+.create_btn {
+    background-color: #3693c2;border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-size: 16px;
+    font-family: Pretendard;
+    line-height: 18px;
+    padding: 12px 24px;
+}
+.create_btn:hover {background-color: #2a7ba3;}
+
+/*페이지네이션 부분*/
+.pagenation {
+  width: 100%;
+  padding:0px;
+  text-align: center;
+}
+.pagenation li {
+  border: 1px solid #B9B9B9;
+  display: inline-block;
+  list-style: none;
+  width: 32px;
+  height: 32px;
+}
+.pagenation .page1 {
+  background-color: #E1545A;
+  color: white;
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
+}
+.pagenation .page2 {
+  background-color: white;
+  color: #B9B9B9;
+  display: block;
+  height: 100%;
+  line-height: 30px;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+}
+.pagenation li a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.pagenation li a span {
+  background-size: contain;
+  background-repeat: no-repeat;
+  display:inline-block;
+  width: 10px;
+  height: 10px;
+}
+.pagenation .prev {
+  background-image: url('/busanbank/images/admin/btn-prev-page.png');
+}
+.pagenation .next {
+  background-image: url('/busanbank/images/admin/btn-next-page.png');
+}

@@ -1,0 +1,218 @@
+<!--날짜 : 2025/11/23
+이름 : 오서정
+내용 : 마이페이지 메인 html/css 수정 작성
+-->
+<div th:replace="~{my/_head.html}"></div>
+<script th:src="@{/js/my/goldEvent.js}" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+    <main>
+            
+        <div class="board">
+            <div class="my-left">
+                <div class="my-info">
+                    <img th:src="@{/images/my/myIcon-p.png}">
+                    <div class="my-info-data">
+                        <div class="my-name">
+                            <h2>[[${user.userName}]] <span>고객님</span></h2>
+                        </div>
+                        <div class="my-remain">
+                            <div>
+                                <p>로그인 ID <span>[[${user.userId}]]</span></p>
+                                <p>이메일 <span>[[${user.email}]]</span></p>
+                                <p>전화번호 <span>[[${user.hp}]]</span></p>
+                                <p>최근 접속 시간 <span>[[${connectTime}]]</span></p>
+                                <p><a th:href="@{/member/point}">내 포인트 </a><span style="color:#662382; font-weight:bold;">
+                                   [[${remainPoints}]] P
+                                </span></p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="my-left-actions">
+<!--                    <div class="action-card gold-event" onclick="openGoldModal()">-->
+<!--                        <span class="action-icon">⛏️</span>-->
+<!--                        <span class="action-text">금캐기 이벤트</span>-->
+<!--                        <span class="action-arrow">〉</span>-->
+<!--                    </div>-->
+                    <a th:href="@{/my/coupon}" class="action-card">
+                        <span class="action-icon">🏷️</span>
+                        <span class="action-text">쿠폰함</span>
+                        <span class="action-arrow">〉</span>
+                    </a>
+                    <a th:href="@{/my/items}" class="action-card">
+                        <span class="action-icon">💰</span>
+                        <span class="action-text">나의 금융 상품</span>
+                        <span class="action-arrow">〉</span>
+                    </a>
+                    <a th:href="@{/my/modify}" class="action-card">
+                        <span class="action-icon">⚙️</span>
+                        <span class="action-text">설정</span>
+                        <span class="action-arrow">〉</span>
+                    </a>
+
+                </div>
+
+
+
+
+            </div>
+            <div class="my-right">
+
+                <div class="my-card first-area">
+                    <div class="welcome-box fade-in">
+                        <span class="my-span">[[${user.userName}]]</span>님과 딸깍은행이 함께한지
+                        <span class="my-span">[[${user.regDays}]]</span>일째 입니다
+                    </div>
+                </div>
+
+                <div class="my-card my-list-area">
+                    <div class="list-puls">
+                        <h2>나의 금융상품 현황</h2>
+                    </div>
+
+                    <div class="item-card">
+                        <p>가입한 상품: [[${countUserItems}]]건</p>
+                        <p>다음 만기 예정: [[${LastDate}]]</p>
+                        <p>최근 가입일: [[${RecentlyDate}]]</p>
+                    </div>
+                </div>
+
+                <div class="my-card my-list-area">
+                    <div class="list-puls">
+                        <h2>문의내역</h2>
+                        <a th:href="@{/cs/customerSupport/login/emailList}">더보기　 〉</a>
+                    </div>
+     
+                        <table class="list-table">
+                              <colgroup>
+                                <col width="10%">
+                                <col width="70%">
+                                <col width="20%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>제목</th>
+                                    <th>등록일</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="cs : ${csList}"
+                                    th:onclick="|location.href='@{/cs/customerSupport/login/emailView(id=${cs.ecounselId})}'|"
+                                    style="cursor:pointer;">
+                                    <td th:inline="text">[[${cs.ecounselId}]]</td>
+                                    <td th:inline="text">[[${cs.title}]]</td>
+                                    <td th:inline="text">[[${cs.createdAt}]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                </div>
+                <div class="my-card my-contents-area">
+
+                    <!-- 좌측 금캐기 배너 -->
+                    <div class="mini-event-card" onclick="openGoldModal()">
+                        <div class="mini-card-left gold-bg">⛏️</div>
+
+                        <div class="mini-card-right">
+                            <p class="mini-title">금 캐기 이벤트</p>
+                            <p class="mini-desc">
+                                금 시세를 예측하고<br>
+                                보너스 쿠폰에 도전하세요!
+                            </p>
+                        </div>
+
+                        <div class="mini-arrow">›</div>
+                    </div>
+
+                    <!-- 우측 게임 배너 -->
+                    <div class="mini-event-card" onclick="location.href='/busanbank/quiz/quizdashboardcomplete'">
+                        <div class="mini-card-left game-bg">🎮</div>
+
+                        <div class="mini-card-right">
+                            <p class="mini-title">더 다양한 금융게임</p>
+                            <p class="mini-desc">
+                                여러 가지 금융 퀴즈로<br>
+                                재미있게 포인트를 모아보세요!
+                            </p>
+                        </div>
+
+                        <div class="mini-arrow">›</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            </div>
+            
+        </div>
+        <!-- 금캐기 모달 -->
+        <div id="goldModal"
+             class="gold-modal hide"
+             th:data-today-price="${todayPrice}">
+
+            <div class="modal-content">
+
+                <!-- 상단 헤더 -->
+                <h2 class="modal-title">금 캐기 이벤트</h2>
+                <div id="goldHeaderLottie" class="header-lottie" style="width: 150px; margin: 0 auto;"></div>
+
+                <p class="today-price">
+                    📈 오늘 금 시세: <span id="todayPrice"></span>원
+                </p>
+                <p class="sub-text">내일 금 시세를 예측해볼까요?</p>
+
+                <!-- 금캐기 버튼 -->
+                <button id="goldPickBtn" class="pick-btn">금 캐기</button>
+
+                <!-- 땅땅땅 애니메이션 -->
+                <div id="miningAnimation" class="mining-animation hide">
+                    <div class="pickaxe">⛏️</div>
+                    <p class="mining-text">땅! 땅! 땅!</p>
+
+                    <!-- 🔥 금가루 Lottie → 여기에 이동! -->
+                    <div id="goldExplosion" class="gold-explosion-area hide"></div>
+                </div>
+
+                <!-- 결과 영역 공통 -->
+                <div id="resultBox" class="result-box hide">
+
+                    <!-- 제목(상태마다 내용 바뀜) -->
+                    <h3 class="result-title"></h3>
+
+                    <!-- 허용 오차 (WAIT에서만 보임) -->
+                    <p class="error-amount hide">
+                        오차율: <span id="errorRate"></span>% <br>
+                        (± <span id="errorAmount"></span>원 변동 가능)
+                    </p>
+
+                    <!-- 예측 범위 -->
+                    <div class="range-box hide">
+                        <strong id="rangeTitle">나의 예측 범위</strong><br>
+                        <span id="rangeMin"></span>원 ~
+                        <span id="rangeMax"></span>원
+                    </div>
+
+                    <!-- WAIT 안내문 -->
+                    <p class="wait-text hide">내일 결과를 기다려주세요!</p>
+
+                </div>
+
+                <!-- 알림 메시지 -->
+                <div id="alreadyMessage" class="already-message hide"></div>
+
+                <button class="close-btn" onclick="closeGoldModal()">닫기</button>
+            </div>
+        </div>
+
+
+
+    </main>
+<!-- Footer 부분 -->
+<div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>

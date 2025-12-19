@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>딸깍은행::상품 검색</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/product/style_searchResult.css}">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+</head>
+<body>
+    <!-- Header 부분 -->
+    <div th:replace="~{_header :: headerFragment}"></div>
+
+    <!-- Product 목록 섹션 -->
+    <section class="container">
+        <div class="main-title">
+            <a href="#" class="title">전체 상품</a>
+        </div>
+
+        <!-- 검색 결과 헤더 -->
+        <div class="search-header">
+            <h2>검색</h2>
+            <form class="search-box" th:action="@{/prod/search}" method="get">
+                <input type="text" name="keyword" placeholder="검색어를 입력하세요." required>
+                <button class="search-submit" type="submit">
+                    <i class="xi-search"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="select">
+            <div class="result"
+                 th:if="${keyword != null}"
+                 th:text="|&quot;${keyword}&quot; 검색 결과 총 ${products.size()}건 검색되었습니다.|">
+            </div>
+
+            <div class="sort">
+                <button class="btn-sort active" type="button">추천순</button>
+                <button class="btn-sort" type="button">판매순</button>
+                <button class="btn-sort" type="button">최신순</button>
+                <button class="btn-sort" type="button">상품명순</button>
+            </div>
+        </div>
+
+        <section class="list-wrap" aria-label="상품 리스트">
+            <!-- Thymeleaf 반복문으로 DB 데이터 출력 -->
+            <article class="product" th:each="product : ${products}">
+                <div class="meta">
+                    <div class="badge">
+                        <span class="type">모바일</span>
+                        <span class="new">신상품</span>
+                    </div>
+                    <div class="prod-info">
+                        <h3 th:text="${product.productName}">상품명</h3>
+                        <p th:text="${product.description}">상품 설명</p>
+                    </div>
+                </div>
+                <!-- 금리 정보 표시 -->
+                <div class="prod-rate" th:if="${product.maturityRate != null and product.maturityRate > 0}">
+                    <div class="rate-max">최고 연 <span class="rate-value" th:text="${product.maturityRate}">0</span>%</div>
+                    <div class="rate-base">(기본 연 <span th:text="${product.baseRate}">0</span>%, 12개월 세전)</div>
+                </div>
+                <div class="prod-rate dummy-rate" th:unless="${product.maturityRate != null and product.maturityRate > 0}"></div>
+
+                <div class="actions">
+                    <img th:src="@{/images/product/kdic-mark.png}" alt="예금보험공사 보호금융상품" />
+                    <div class="btn-actions">
+                        <!-- 영업점 가입 -->
+                        <button class="btn-join btn-branch"
+                                type="button"
+                                th:if="${product.joinTypes?.contains('BRANCH')}"
+                                th:onclick="|window.location.href='@{/company/companymap}'|">
+                            영업점 가입
+                        </button>
+                        <!-- 인터넷 가입 -->
+                        <button class="btn-join btn-internet" type="button"
+                                th:if="${product.joinTypes?.contains('INTERNET')}"
+                                th:onclick="|window.location.href='@{/prod/view(productNo=${product.productNo})}'|">
+                            인터넷 가입
+                        </button>
+                        <!-- 스마트폰 가입 -->
+                        <button class="btn-join btn-mobile" type="button"
+                                th:if="${product.joinTypes?.contains('MOBILE')}">
+                            스마트폰 가입
+                        </button>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <div class="pagination">
+
+            <!-- 비활성화 상태 (page == 1) -->
+            <a class="page-btn prev disabled" th:if="${page} == 1">
+                <i class="xi-angle-left-min"></i>
+            </a>
+
+            <!-- 활성화 상태 -->
+            <a class="page-btn prev" th:unless="${page} == 1"
+               th:href="@{/prod/search(keyword=${keyword}, page=${page - 1})}">
+                <i class="xi-angle-left-min"></i>
+            </a>
+
+            <a th:each="num : ${#numbers.sequence(startPage, endPage)}"
+               th:href="@{/prod/search(keyword=${keyword}, page=${num})}"
+               th:class="'page-num ' + (${page} == ${num} ? 'active' : '')"
+               th:text="${num}">
+            </a>
+
+            <!-- 비활성화 상태 (마지막 페이지일 때) -->
+            <a class="page-btn next disabled" th:if="${page} == ${totalPages}">
+                <i class="xi-angle-right-min"></i>
+            </a>
+
+            <!-- 활성화 상태 -->
+            <a class="page-btn next" th:unless="${page} == ${totalPages}"
+               th:href="@{/prod/search(keyword=${keyword}, page=${page + 1})}">
+                <i class="xi-angle-right-min"></i>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- Footer 부분 -->
+    <div th:replace="~{_footer :: footerFragment(${appInfo})}"></div>
+</body>
+</html>

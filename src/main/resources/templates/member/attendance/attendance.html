@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>딸깍은행::출석체크</title>
+    <link rel="stylesheet" th:href="@{/css/common/style_font.css}">
+    <link rel="stylesheet" th:href="@{/css/common/style_common.css}">
+    <link href="//cdn.jsdelivr.net/xeicon/2/xeicon.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/_header.css}">
+    <link rel="stylesheet" th:href="@{/css/_footer.css}">
+    <link rel="stylesheet" th:href="@{/css/member/AutoLogout.css}">
+
+    <script th:src="@{/js/translate.js}" defer></script>
+    <script th:src="@{/js/globalBtn.js}" defer></script>
+    <script th:src="@{/js/searchOverlay.js}" defer></script>
+    <script th:src="@{/js/gnbDropdown.js}" defer></script>
+    <script th:src="@{/js/member/session-timer.js}" defer></script>
+
+    <style>
+        .attendance-container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(102, 35, 130, 0.3);
+        }
+
+        .attendance-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .attendance-header-title {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .attendance-header-title img {
+            width: 70px;
+            height: auto;
+        }
+
+        .attendance-header-title h1 {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--purple-900);
+        }
+
+        .attendance-header p {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--grey-900);
+            margin-bottom: 10px;
+        }
+
+        .consecutive-days {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--grey-700);
+            margin: 20px 0;
+        }
+
+        .consecutive-days .number {
+            font-size: 50px;
+            font-weight: bold;
+            color: var(--purple-900);
+        }
+
+        .check-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 24px;
+            font-weight: 700;
+            border-radius: 45px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .check-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 61, 165, 0.3);
+        }
+
+        .check-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .rewards-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .rewards-section h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--purple-900);
+            margin-bottom: 20px;
+        }
+
+        .rewards-section p {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--grey-900);
+            margin-bottom: 20px;
+        }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+
+        .reward-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .reward-card.active {
+            border-color: var(--purple-900);
+            background: var(--purple-100);
+        }
+
+        .reward-card .day {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--purple-900);
+            margin-bottom: 10px;
+        }
+
+        .reward-card .points {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--grey-700);
+        }
+
+        .reward-card .description {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--grey-700);
+            margin-top: 10px;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="~{_header :: headerFragment}"></header>
+
+<div class="attendance-container">
+    <div class="attendance-header">
+        <div class="attendance-header-title">
+            <img th:src="@{/images/quiz/agenda.png}">
+            <h1>출석체크</h1>
+        </div>
+        <p>매일 출석하고 포인트를 받으세요!</p>
+
+        <div class="consecutive-days">
+            <span>연속 출석</span>
+            <div class="number" th:text="${consecutiveDays} + '일'">0일</div>
+        </div>
+
+        <button class="check-button"
+                th:disabled="${isAttendedToday}"
+                th:text="${isAttendedToday} ? '오늘 출석 완료' : '출석하기'"
+                onclick="checkAttendance()">
+            출석하기
+        </button>
+
+        <div id="message" class="message" style="display: none;"></div>
+    </div>
+
+    <div class="rewards-section">
+        <h2>🎁 출석 보상</h2>
+        <p>💰 기본 10P + 🎁 연속 출석 보너스</p>
+        <div class="rewards-grid">
+            <div class="reward-card" th:each="reward : ${rewards}"
+                 th:classappend="${consecutiveDays >= reward.consecutiveDays} ? 'active' : ''">
+                <div class="day" th:text="${reward.consecutiveDays} + '일차'">1일차</div>
+                <div class="points">
+                    <span>기본 10P +</span><br>
+                    <span style="font-size: 24px; font-weight: 700; color: #ff6b00;" th:text="'보너스 ' + ${reward.rewardPoints} + 'P'">보너스 10P</span>
+                </div>
+                <div class="description" th:text="${reward.rewardDescription}">연속 출석 보상</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{_footer :: footerFragment(null)}"></footer>
+
+<script>
+    async function checkAttendance() {
+        try {
+            const response = await fetch('/busanbank/member/attendance/check', {
+                method: 'POST'
+            });
+            const result = await response.json();
+
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'block';
+
+            if (result.success) {
+                messageDiv.className = 'message success';
+                messageDiv.textContent = result.message;
+
+                // 페이지 새로고침하여 업데이트된 정보 반영
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                messageDiv.className = 'message info';
+                messageDiv.textContent = result.message;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'block';
+            messageDiv.className = 'message info';
+            messageDiv.textContent = '출석체크 중 오류가 발생했습니다.';
+        }
+    }
+</script>
+</body>
+</html>
