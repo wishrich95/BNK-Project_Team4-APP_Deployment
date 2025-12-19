@@ -19,7 +19,7 @@ spring:
     version: 0.0.1-SNAPSHOT
   data:
     redis:
-      host: localhost  # 배포할 때, 127.0.0.1 로 수정해서 진행
+      host: 127.0.0.1  # 배포할 때, 127.0.0.1 로 수정해서 진행
       port: 6379
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
