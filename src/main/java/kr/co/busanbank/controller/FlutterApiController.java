@@ -6,11 +6,13 @@ import kr.co.busanbank.security.AESUtil;
 import kr.co.busanbank.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +53,14 @@ public class FlutterApiController {
     private final BranchCheckinService branchCheckinService;
     private final PointService pointService;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private NewsCrawlerService newsCrawlerService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private ProductService productService;
+
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // 1. 지점 목록 조회
@@ -1088,6 +1098,183 @@ public class FlutterApiController {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "프로필 조회 중 오류가 발생했습니다"));
         }
+    }
+
+
+    /**
+     * ✅ 카테고리 목록 조회
+     */
+    @GetMapping("/categories")
+    public ResponseEntity<?> getAllCategories() {
+        try {
+            List<CategoryDTO> categories = categoryService.getAllCategories();
+            return ResponseEntity.ok(categories);
+        } catch (Exception e) {
+            log.error("카테고리 목록 조회 실패", e);
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "조회 실패"));
+        }
+    }
+
+    /**
+     * ✅ 카테고리별 상품 조회
+     */
+    @GetMapping("/products/by-category/{categoryId}")
+    public ResponseEntity<?> getProductsByCategory(@PathVariable int categoryId) {
+        try {
+            List<ProductDTO> products = productService.getProductsByCategory(categoryId);
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            log.error("카테고리별 상품 조회 실패: categoryId={}", categoryId, e);
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "조회 실패"));
+        }
+    }
+
+    /**
+     * ✅ 뉴스 URL 분석
+     */
+    @PostMapping("/news/analyze/url")
+    public ResponseEntity<?> analyzeNewsUrl(@RequestBody Map<String, String> request) {
+        String url = request.get("url");
+
+        if (url == null || url.trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "URL이 비어있습니다"));
+        }
+
+        try {
+            log.info("뉴스 URL 분석 시작: {}", url);
+            NewsAnalysisResult result = newsCrawlerService.analyzeUrlWithAI(url);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            log.error("뉴스 분석 실패: {}", e.getMessage(), e);
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "분석 실패: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * ✅ 이미지 분석 (선택사항)
+     */
+    @PostMapping("/news/analyze/image")
+    public ResponseEntity<?> analyzeNewsImage(@RequestParam("file") MultipartFile file) {
+
+        // ✅ 상세 로깅
+        System.out.println("========================================");
+        System.out.println("📸 이미지 분석 요청 받음");
+        System.out.println("파일명: " + file.getOriginalFilename());
+        System.out.println("크기: " + file.getSize() + " bytes");
+        System.out.println("Content-Type: " + file.getContentType());
+        System.out.println("isEmpty: " + file.isEmpty());
+        System.out.println("========================================");
+
+        if (file.isEmpty()) {
+            System.err.println("❌ 파일이 비어있습니다!");
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "파일이 비어있습니다"));
+        }
+
+        try {
+            System.out.println("✅ OCR 시작...");
+            NewsAnalysisResult result = newsCrawlerService.analyzeImage(file);
+
+            System.out.println("✅ 분석 완료!");
+            System.out.println("제목: " + result.getTitle());
+            System.out.println("요약 길이: " + (result.getSummary() != null ? result.getSummary().length() : 0));
+            System.out.println("========================================");
+
+            return ResponseEntity.ok(result);
+
+        } catch (IllegalArgumentException e) {
+            System.err.println("❌ 입력 오류: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest()
+                    .body(Map.of(
+                            "error", "입력 오류",
+                            "message", e.getMessage()
+                    ));
+
+        } catch (Exception e) {
+            System.err.println("❌ 이미지 분석 실패!");
+            System.err.println("에러 타입: " + e.getClass().getName());
+            System.err.println("에러 메시지: " + e.getMessage());
+            e.printStackTrace();
+
+            return ResponseEntity.status(500)
+                    .body(Map.of(
+                            "error", "이미지 분석 실패",
+                            "message", e.getMessage() != null ? e.getMessage() : "알 수 없는 오류",
+                            "type", e.getClass().getSimpleName()
+                    ));
+        }
+    }
+
+    /**
+     * 만보기 포인트 지급
+     */
+    @PostMapping("/points/steps/earn")
+    public ResponseEntity<?> earnStepsPoints(
+            @RequestBody Map<String, Object> request,
+            Authentication authentication) {
+        try {
+            Long userNo = ((Number) request.get("userNo")).longValue();
+            int steps = ((Number) request.get("steps")).intValue();
+            String date = (String) request.get("date"); // "2024-12-19" 형식
+
+            log.info("📱 [Flutter] 만보기 포인트 지급 요청 - userNo: {}, steps: {}", userNo, steps);
+
+            // 목표 미달성 체크
+            if (steps < 10000) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(Map.of("success", false, "message", "10,000보를 달성해야 포인트를 받을 수 있습니다"));
+            }
+
+            // 포인트 계산 (10,000보 = 100포인트)
+            int pointsToEarn = 100;
+
+            // 포인트 지급
+            boolean success = pointService.earnPoints(
+                    userNo.intValue(),
+                    pointsToEarn,
+                    String.format("만보기 목표 달성 (%d보)", steps)
+            );
+
+            if (success) {
+                log.info("✅ 만보기 포인트 지급 완료: {}P", pointsToEarn);
+                return ResponseEntity.ok(Map.of(
+                        "success", true,
+                        "earnedPoints", pointsToEarn,
+                        "message", pointsToEarn + "포인트가 지급되었습니다!"
+                ));
+            } else {
+                return ResponseEntity
+                        .badRequest()
+                        .body(Map.of("success", false, "message", "포인트 지급 실패"));
+            }
+
+        } catch (Exception e) {
+            log.error("❌ 만보기 포인트 지급 실패", e);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "서버 오류"));
+        }
+    }
+
+    private int calculateStepsPoints(int steps) {
+        // 10,000보 달성 시 100포인트
+        if (steps >= 10000) return 100;
+        // 5,000보 달성 시 50포인트
+        if (steps >= 5000) return 50;
+        // 그 외
+        return 0;
+    }
+
+    private boolean checkIfAlreadyEarned(int userId, String date) {
+        // TODO: DB에서 오늘 날짜로 만보기 포인트 지급 이력이 있는지 체크
+        // PointMapper에 메서드 추가 필요
+        return false;
     }
 
 }
