@@ -16,7 +16,7 @@ server:
 spring:
   application:
     name: Busanbank
-    version: 0.0.3-SNAPSHOT
+    version: 0.0.5-SNAPSHOT
   data:
     redis:
       host: 127.0.0.1  # 배포할 때, 127.0.0.1 로 수정해서 진행
@@ -130,6 +130,21 @@ spring:
 #            token-uri: https://kauth.kakao.com/oauth/token
 #            user-info-uri: https://kapi.kakao.com/v2/user/me
 #            user-name-attribute: id
+
+chat:
+  assign:
+    pullEnabled: true
+  redis:
+    stream:
+      key: chat:stream:messages
+      group: chat-msg-workers
+    consultant:
+      readyZset: chat:consultant:ready
+      loadZset: chat:consultant:load
+      statusPrefix: "chat:consultant:status:"
+      lockPrefix: "chat:consultant:lock:"
+    waitingZset: "chat:waitingZset"
+    assigningZset: "chat:queue:assigning"
 
 coin:
   api:
