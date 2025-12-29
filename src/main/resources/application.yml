@@ -16,7 +16,7 @@ server:
 spring:
   application:
     name: Busanbank
-    version: 0.0.5-SNAPSHOT
+    version: 0.0.6-SNAPSHOT
   data:
     redis:
       host: 127.0.0.1  # 배포할 때, 127.0.0.1 로 수정해서 진행
@@ -82,6 +82,10 @@ spring:
   openai:
     api-key: ${OPENAI_KEY:default_value}
 
+  google:
+    vision:
+      api-key: AIzaSyABTgUmMAZImCNHa1kPXfIG5ct5Ueos9jU
+
   aes:
     secret-key: ${AES_SECRET:BusanBankAESKey1}
 
@@ -131,21 +135,6 @@ spring:
 #            user-info-uri: https://kapi.kakao.com/v2/user/me
 #            user-name-attribute: id
 
-chat:
-  assign:
-    pullEnabled: true
-  redis:
-    stream:
-      key: chat:stream:messages
-      group: chat-msg-workers
-    consultant:
-      readyZset: chat:consultant:ready
-      loadZset: chat:consultant:load
-      statusPrefix: "chat:consultant:status:"
-      lockPrefix: "chat:consultant:lock:"
-    waitingZset: "chat:waitingZset"
-    assigningZset: "chat:queue:assigning"
-
 coin:
   api:
     key: 648e877816884b0fb17a020082e40d2f
@@ -159,7 +148,7 @@ gold:
 
 file:
   upload:
-    path: /var/lib/busanbank/uploads/
+    path: C:/upload/
 
 
 firebase:
