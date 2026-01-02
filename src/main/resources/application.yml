@@ -16,10 +16,10 @@ server:
 spring:
   application:
     name: Busanbank
-    version: 0.0.1-SNAPSHOT
+    version: 1.0.0-RELEASE
   data:
     redis:
-      host: localhost  # 배포할 때, 127.0.0.1 로 수정해서 진행
+      host: 127.0.0.1  # 배포할 때, 127.0.0.1 로 수정해서 진행
       port: 6379
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
@@ -70,24 +70,24 @@ spring:
       secret: ${SOLAPI_SECRET:default_value}
       from: ${SOLAPI_FROM:default_value}
 
-#  youtube:
-#    api:
-#      api-key: ${YOUTUBE_API_KEY}
-#      playlist-id: "PLZGDyqLjHoLQpBJ59m1lRHGP__TCvSDF2"
+  #  youtube:
+  #    api:
+  #      api-key: ${YOUTUBE_API_KEY}
+  #      playlist-id: "PLZGDyqLjHoLQpBJ59m1lRHGP__TCvSDF2"
 
   gemini:
     api:
       key: ${GEMINI_KEY:default_value}
 
+  google:
+    vision:
+      api-key: ${GOOGLE_VISION_API_KEY:default_value}
+
   openai:
     api-key: ${OPENAI_KEY:default_value}
 
-  google:
-    vision:
-      api-key: AIzaSyABTgUmMAZImCNHa1kPXfIG5ct5Ueos9jU
-
   aes:
-    secret-key: ${AES_SECRET:BusanBankAESKey1}
+    secret-key: ${AES_SECRET:default_value}
 
   security:
     user:
@@ -135,12 +135,47 @@ spring:
 #            user-info-uri: https://kapi.kakao.com/v2/user/me
 #            user-name-attribute: id
 
+# --- External integrations ---
+agora:
+  app-id: ${AGORA_APP_ID}
+  app-certificate: ${AGORA_APP_CERTIFICATE}
+  token-ttl-seconds: 3600
+
+chat:
+  assign:
+    pullEnabled: true
+
+  call:
+    assign:
+      enabled: true
+      delayMs: 150
+      maxPerTick: 20
+
+    assignedTimeoutMs: 15000
+
+    waitingZsetPrefix: "chat:call:waiting:"
+    assignedWatchZset: "chat:call:assigned:watch"
+    sessionPrefix: "chat:session:"
+
+  redis:
+    stream:
+      key: chat:stream:messages
+      group: chat-msg-workers
+    consultant:
+      readyZset: chat:consultant:ready
+      loadZset: chat:consultant:load
+      statusPrefix: "chat:consultant:status:"
+      lockPrefix: "chat:consultant:lock:"
+    waitingZset: "chat:waitingZset"
+    assigningZset: "chat:queue:assigning"
+
 coin:
   api:
     key: 648e877816884b0fb17a020082e40d2f
 
 deepl:
-  api-key: f4c76e28-97e3-4802-9c3b-30524c65fec2:f
+  api-key: f4c76e28-97e3-4802-9c3b-30524c65fec2:fx
+
 gold:
   api:
     key: 59bc0415bb3e4270fce2393e2d74b9d3
@@ -156,11 +191,10 @@ firebase:
 # jwt 관련 Key 추가
 jwt:
   issuer: yd89023754@gmail.com
-  secret: E912C15AA2495217ECD6BE5BEA8D1102  
+  secret: E912C15AA2495217ECD6BE5BEA8D1102
 
 
 
 #file:
 #  upload:
 #    path: C:/busanbank/uploads/
-
