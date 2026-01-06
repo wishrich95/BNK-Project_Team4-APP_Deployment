@@ -82,7 +82,7 @@ spring:
     api-key: ${OPENAI_KEY:default_value}
 
   aes:
-    secret-key: ${AES_SECRET:default_value}
+    secret-key: ${AES_SECRET:BusanBankAESKey1}
 
   security:
     user:
@@ -101,10 +101,13 @@ chat:
     pullEnabled: true
 
   call:
+    acceptAllowQueryId: true
     assign:
       enabled: true
       delayMs: 150
       maxPerTick: 20
+    voice:
+      waitingZset: "call:voice:waiting"
 
     assignedTimeoutMs: 15000
 
@@ -139,7 +142,6 @@ file:
   upload:
     path: /var/lib/busanbank/uploads/
 
-
 firebase:
   credentials-path: ${FIREBASE_CREDENTIALS_PATH}
 
@@ -147,9 +149,3 @@ firebase:
 jwt:
   issuer: yd89023754@gmail.com
   secret: E912C15AA2495217ECD6BE5BEA8D1102
-
-
-
-#file:
-#  upload:
-#    path: C:/busanbank/uploads/
